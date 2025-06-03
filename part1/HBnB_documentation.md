@@ -381,5 +381,3 @@ These are the primary reference sources used to create this documentation:
 - [Facade Design Pattern](https://sourcemaking.com/design_patterns/facade)
 
 ---
-
-**Note**: This documentation serves as a living document and should be updated as the application evolves. All diagrams referenced should be placed in a `docs/images/` directory within the repository.

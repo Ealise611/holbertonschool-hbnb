@@ -109,8 +109,8 @@ The User class represents the individuals who interact with the system. Users ca
 - `delete_account()`
 
 **Relationships:**
-- 1 → * with Place (owns)
-- 1 → * with Review (writes)
+- 1 → \* with Place (owns)
+- 1 → \* with Review (writes)
 
 #### Place
 
@@ -133,10 +133,10 @@ The Place class represents property listings created by users. Each place includ
 - `list_places()`
 
 **Relationships:**
-- * → 1 with User (owned by)
-- 1 → * with Review (has)
-- * → * with Places (has)
-- 1 → * with AmenitiesPlaces (linked to amenities)
+- \* → 1 with User (owned by)
+- 1 → \* with Review (has)
+- \* → \* with Places (has)
+- 1 → \* with AmenitiesPlaces (linked to amenities)
 
 #### Review
 
@@ -156,8 +156,8 @@ The Review class captures feedback left by users for a specific place.
 - `list_by_place(place_id: UUID)`
 
 **Relationships:**
-- * → 1 with User (written by)
-- * → 1 with Place (about)
+- \* → 1 with User (written by)
+- \* → 1 with Place (about)
 
 #### Amenity
 
@@ -177,8 +177,8 @@ The Amenity class represents a feature or service available at one or more place
 - `list_amenities()`
 
 **Relationships:**
-- 1 → * with AmenitiesPlaces (offered in)
-- * → * with Places (applies to)
+- 1 → \* with AmenitiesPlaces (offered in)
+- \* → * with Places (applies to)
 
 #### AmenityPlaces
 
@@ -192,8 +192,8 @@ The AmenityPlaces class is a linking model that resolves the many-to-many relati
 - `updated_at`: datetime
 
 **Relationships:**
-- * → 1 with Place
-- * → 1 with Amenity
+- \* → 1 with Place
+- \* → 1 with Amenity
 
 ### 3.3 Class Diagram
 

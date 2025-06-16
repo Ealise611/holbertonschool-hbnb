@@ -1,8 +1,8 @@
 from app.models.base_model import BaseModel
 
 class Place(BaseModel):
-    def _init_(self, title, description, price, latitude, longitude, owner):
-        super()._init_()
+    def __init__(self, title, description, price, latitude, longitude, owner):
+        super().__init__()
         if not title or len(title) > 100:
             raise ValueError("Title is required and must be ≤ 100 characters")
         if price < 0:

@@ -1,0 +1,3 @@
+flask
+flask-restx
+pip install -r requirements.txt

@@ -42,7 +42,7 @@ class UserResource(Resource):
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
 
 @api.route('/')
-class UserResource(Resource):
+class UserGetAll(Resource):
     def get(self):
         """Retrieve list of users"""
         users = facade.get_all_users()
@@ -58,7 +58,7 @@ class UserResource(Resource):
         ], 200
 
 @api.route('/<user_id>')
-class UserResource(Resource):
+class UserUpdate(Resource):
     def put(self, user_id):
         data = api.payload
         update_user = facade.update_user(user_id, data)

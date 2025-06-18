@@ -3,33 +3,12 @@ from app.services import facade
 
 api = Namespace('reviews', description='Review operations')
 
-# Define the models for related entities
-user_model = api.model('ReviewUser', {
-    'id': fields.String(description='User ID'),
-    'first_name': fields.String(description='First name of the reviewer'),
-    'last_name': fields.String(description='Last name of the reviewer'),
-    'email': fields.String(description='Email of the reviewer')
-})
-
-place_model = api.model('ReviewPlace', {
-    'id': fields.String(description='Place ID'),
-    'title': fields.String(description='Title of the place'),
-    'latitude': fields.Float(description='Latitude of the place'),
-    'longitude': fields.Float(description='Longitude of the place')
-})
-
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
-    'text': fields.String(required=True, description='Review text/comment'),
-    'rating': fields.Integer(required=True, description='Rating from 1 to 5', min=1, max=5),
-    'user_id': fields.String(required=True, description='ID of the user writing the review'),
-    'place_id': fields.String(required=True, description='ID of the place being reviewed')
-})
-
-# Update model for PUT requests (excludes user_id and place_id)
-review_update_model = api.model('ReviewUpdate', {
-    'text': fields.String(required=False, description='Updated review text'),
-    'rating': fields.Integer(required=False, description='Updated rating from 1 to 5', min=1, max=5)
+    'text': fields.String(required=True, description='Text of the review'),
+    'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
+    'user_id': fields.String(required=True, description='ID of the user'),
+    'place_id': fields.String(required=True, description='ID of the place')
 })
 
 @api.route('/')
@@ -37,13 +16,9 @@ class ReviewList(Resource):
     @api.expect(review_model, validate=True)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
-    @api.response(400, 'User not found')
-    @api.response(400, 'Place not found')
-    @api.response(400, 'User has already reviewed this place')
     def post(self):
-        """Submit a new review"""
+        """Register a new review"""
         review_data = api.payload
-
         try:
             new_review = facade.create_review(review_data)
             return {
@@ -66,16 +41,7 @@ class ReviewList(Resource):
             {
                 'id': review.id,
                 'text': review.text,
-                'rating': review.rating,
-                'user': {
-                    'id': review.user.id,
-                    'first_name': review.user.first_name,
-                    'last_name': review.user.last_name
-                },
-                'place': {
-                    'id': review.place.id,
-                    'title': review.place.title
-                }
+                'rating': review.rating
             }
             for review in reviews
         ], 200
@@ -94,40 +60,23 @@ class ReviewResource(Resource):
             'id': review.id,
             'text': review.text,
             'rating': review.rating,
-            'user': {
-                'id': review.user.id,
-                'first_name': review.user.first_name,
-                'last_name': review.user.last_name,
-                'email': review.user.email
-            },
-            'place': {
-                'id': review.place.id,
-                'title': review.place.title,
-                'latitude': review.place.latitude,
-                'longitude': review.place.longitude
-            }
+            'user_id': review.user.id,
+            'place_id': review.place.id
         }, 200
 
-    @api.expect(review_update_model, validate=True)
+    @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input data')
     def put(self, review_id):
         """Update a review's information"""
         review_data = api.payload
-        
         try:
             updated_review = facade.update_review(review_id, review_data)
             if not updated_review:
                 return {'error': 'Review not found'}, 404
             
-            return {
-                'id': updated_review.id,
-                'text': updated_review.text,
-                'rating': updated_review.rating,
-                'user_id': updated_review.user.id,
-                'place_id': updated_review.place.id
-            }, 200
+            return {'message': 'Review updated successfully'}, 200
         except ValueError as e:
             return {'error': str(e)}, 400
         except Exception as e:
@@ -143,13 +92,12 @@ class ReviewResource(Resource):
         
         return {'message': 'Review deleted successfully'}, 200
 
-@api.route('/places/<place_id>')
-class PlaceReviews(Resource):
-    @api.response(200, 'Place reviews retrieved successfully')
+@api.route('/places/<place_id>/reviews')
+class PlaceReviewList(Resource):
+    @api.response(200, 'List of reviews for the place retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get all reviews for a specific place"""
-        # Check if place exists
         place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
@@ -160,11 +108,7 @@ class PlaceReviews(Resource):
                 'id': review.id,
                 'text': review.text,
                 'rating': review.rating,
-                'user': {
-                    'id': review.user.id,
-                    'first_name': review.user.first_name,
-                    'last_name': review.user.last_name
-                }
+                'user_id': review.user.id
             }
             for review in reviews
         ], 200

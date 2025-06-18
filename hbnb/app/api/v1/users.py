@@ -29,20 +29,6 @@ class UserList(Resource):
         new_user = facade.create_user(user_data)
         return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
 
-
-@api.route('/<user_id>')
-class UserResource(Resource):
-    @api.response(200, 'User details retrieved successfully')
-    @api.response(404, 'User not found')
-    def get(self, user_id):
-        """Get user details by ID"""
-        user = facade.get_user(user_id)
-        if not user:
-            return {'error': 'User not found'}, 404
-        return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
-
-@api.route('/')
-class UserResource(Resource):
     def get(self):
         """Retrieve list of users"""
         users = facade.get_all_users()
@@ -59,7 +45,33 @@ class UserResource(Resource):
 
 @api.route('/<user_id>')
 class UserResource(Resource):
+    @api.response(200, 'User details retrieved successfully')
+    @api.response(404, 'User not found')
+    def get(self, user_id):
+        """Get user details by ID"""
+        user = facade.get_user(user_id)
+        if not user:
+            return {'error': 'User not found'}, 404
+        return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
+
+    @api.expect(user_model, validate=True)
+    @api.response(200, 'User updated successfully')
+    @api.response(404, 'User not found')
+    @api.response(400, 'Invalid input data')
     def put(self, user_id):
+        """Update user by ID"""
         data = api.payload
+        user = facade.get_user(user_id)
+
+        if not user:
+            return {'error': 'User not found'}, 404
+
+
         update_user = facade.update_user(user_id, data)
-        return {'id': update_user.id, 'first_name': update_user.first_name, 'last_name': update_user.last_name, 'email': update_user.email}, 200
+ 
+        return {
+            'id': update_user.id,
+            'first_name': update_user.first_name,
+            'last_name': update_user.last_name,
+            'email': update_user.email
+            }, 200

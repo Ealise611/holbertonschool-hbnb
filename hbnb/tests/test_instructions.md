@@ -1,13 +1,5 @@
 # Step-by-Step Testing Guide
 
-## What I Fixed
-
-1. **Added Places namespace registration** in `app/__init__.py`
-2. **Removed duplicate namespace declaration** from `places.py`
-3. **Fixed password requirement** in User model (made optional for API)
-4. **Improved error handling** in facade methods
-5. **Fixed requirements.txt** (removed invalid line)
-
 ## Testing Steps
 
 ### 1. Restart Your Application

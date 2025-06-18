@@ -73,11 +73,13 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get place details by ID"""
-        place = facade.get_place(place_id) # place_id parameter comes from the URL
+        place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
         
-        # Returns full place details including owner info and amenities list
+        # Get reviews for this place
+        reviews = facade.get_reviews_by_place(place_id)
+        
         return {
             'id': place.id,
             'title': place.title,
@@ -97,6 +99,15 @@ class PlaceResource(Resource):
                     'name': amenity.name
                 }
                 for amenity in place.amenities
+            ],
+            'reviews': [
+                {
+                    'id': review.id,
+                    'text': review.text,
+                    'rating': review.rating,
+                    'user_id': review.user.id
+                }
+                for review in reviews
             ]
         }, 200
 

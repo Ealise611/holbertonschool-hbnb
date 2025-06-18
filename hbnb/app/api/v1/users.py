@@ -52,7 +52,12 @@ class UserResource(Resource):
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
-        return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
+        return {
+                'id': user.id, 
+                'first_name': user.first_name, 
+                'last_name': user.last_name, 
+                'email': user.email
+        }, 200
 
     @api.expect(user_model, validate=True)
     @api.response(200, 'User updated successfully')

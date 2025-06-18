@@ -13,7 +13,6 @@ class HBnBFacade:
 
     # USER FACADE
     def create_user(self, user_data):
-        # Logic will be implemented in later tasks
         user = User(**user_data)
         self.user_repo.add(user)
         return user
@@ -57,7 +56,7 @@ class HBnBFacade:
 
         # Process amenities if provided
         amenities = []
-        if 'amenities' in place_data:
+        if 'amenities' in place_data and place_data['amenities']:
             for amenity_id in place_data['amenities']:
                 amenity = self.get_amenity(amenity_id)
                 if amenity:
@@ -107,10 +106,11 @@ class HBnBFacade:
         # Handle amenities update if provided
         if 'amenities' in place_data:
             new_amenities = []
-            for amenity_id in place_data['amenities']:
-                amenity = self.get_amenity(amenity_id)
-                if amenity:
-                    new_amenities.append(amenity)
+            if place_data['amenities']:  # Check if amenities list is not empty
+                for amenity_id in place_data['amenities']:
+                    amenity = self.get_amenity(amenity_id)
+                    if amenity:
+                        new_amenities.append(amenity)
             place.amenities = new_amenities
             del place_data['amenities']
         

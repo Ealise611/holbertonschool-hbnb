@@ -25,7 +25,7 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
+    'amenities': fields.List(fields.String, required=False, description="List of amenities ID's")
 })
 
 @api.route('/') # handles /api/v1/places/
@@ -126,5 +126,3 @@ class PlaceResource(Resource):
             return {'error': str(e)}, 400
         except Exception as e:
             return {'error': 'Invalid input data'}, 400
-        
-api = Namespace('places', description='Place operations')

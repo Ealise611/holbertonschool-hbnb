@@ -66,12 +66,15 @@ class UserResource(Resource):
         if not user:
             return {'error': 'User not found'}, 404
 
-
-        update_user = facade.update_user(user_id, data)
+        updated_user = facade.update_user(user_id, data)
+    
+        # Check if update was successful
+        if not updated_user:
+            return {'error': 'User not found'}, 404
  
         return {
-            'id': update_user.id,
-            'first_name': update_user.first_name,
-            'last_name': update_user.last_name,
-            'email': update_user.email
-            }, 200
+            'id': updated_user.id,
+            'first_name': updated_user.first_name,
+            'last_name': updated_user.last_name,
+            'email': updated_user.email
+        }, 200

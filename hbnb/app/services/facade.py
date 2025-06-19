@@ -29,7 +29,17 @@ class HBnBFacade:
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
-        return self.user_repo.get_by_attribute('email', email)
+        """Get user by email (case-insensitive)"""
+        if not email or not email.strip():
+            return None
+        
+        # Search through all users manually
+        all_users = self.user_repo.get_all()
+        for user in all_users:
+            if user.email.lower() == email.strip().lower():
+                return user
+        
+        return None
 
     def get_all_users(self):
         return self.user_repo.get_all()

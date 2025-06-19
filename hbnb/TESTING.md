@@ -12,7 +12,7 @@
 
 ## 1. Overview
 
-This document provides comprehensive testing and validation documentation for the HBnB API v1 as required by Task 6. The testing strategy includes:
+This document provides comprehensive testing and validation documentation for the HBnB API v1. The testing strategy includes:
 
 - **Basic validation implementation** for all entity models
 - **Black-box testing using Postman** collection
@@ -32,7 +32,7 @@ This document provides comprehensive testing and validation documentation for th
 
 ## 2. Validation Implementation
 
-Basic validation checks have been implemented for all entity models as required by Task 6. The following validation rules are enforced:
+Basic validation checks have been implemented for all entity models. The following validation rules are enforced:
 
 ### 2.1 User Model Validation
 
@@ -105,7 +105,7 @@ Basic validation checks have been implemented for all entity models as required 
 
 ---
 
-## 3. API Testing Results
+## 3. Postman API Testing
 
 ### 3.1 Test Execution Summary
 - **Tool**: Postman Collection "HBnB API v1"
@@ -126,10 +126,9 @@ Basic validation checks have been implemented for all entity models as required 
 5. **Edge Case Testing**: Tested boundary conditions and error scenarios
 
 **Testing Approach:**
-- Black-box methodology (testing API behavior without internal knowledge)
+- Black-box methodology (testing API behaviour without internal knowledge)
 - Comprehensive CRUD operation coverage
 - Relationship and validation testing
-- Performance benchmarking
 
 ### 3.3 Test Categories
 
@@ -140,7 +139,7 @@ Basic validation checks have been implemented for all entity models as required 
 | Review Management | 6 | ✅ 6/6 | Rating validation, user-place relationships |
 | Amenity Management | 6 | ✅ 6/6 | Name validation, CRUD operations |
 
-### 3.4 Test Organization Structure
+### 3.4 Test Organisation Structure
 
 **Collection Structure:**
 1. **Create All** - Initial data setup (9 tests)
@@ -173,7 +172,6 @@ Basic validation checks have been implemented for all entity models as required 
 - ✅ Non-existent resource access → 404 "User not found"
 - ✅ Empty required fields → 400 with appropriate error messages
 
-
 **Example Test Case**
 
 **User Creation Validation:**
@@ -181,23 +179,22 @@ Basic validation checks have been implemented for all entity models as required 
 POST http://127.0.0.1:5000/api/v1/users/
 Content-Type: application/json
 
-body:
 {
- "first_name": "Invalid",
- "last_name": "User",
- "email": "invalid-email"
+  "first_name": "Invalid",
+  "last_name": "User",
+  "email": "invalid-email"
 }
 ```
 
 **Response: 400 Bad Request**
-```
+```json
 {
   "error": "Invalid email"
 }
 ```
 
 **Postman Test Script:**
-```
+```javascript
 pm.test("Status code is 400", function () {
     pm.response.to.have.status(400);
 });
@@ -207,6 +204,7 @@ pm.test("Error message present", function () {
     pm.expect(jsonData).to.have.property('error');
 });
 ```
+
 ### 3.6 Performance Results
 
 | Operation Type | Average Response Time | Test Count | Status |
@@ -234,85 +232,124 @@ pm.test("Error message present", function () {
 
 **Error Response Format Consistency:**
 - All error responses return JSON with descriptive error messages
-- Proper error categorization (validation vs. not found vs. server errors)
+- Proper error categorisation (validation vs. not found vs. server errors)
 - Consistent error message formatting across all endpoints
 
 ---
 
 ## 4. Unit Testing Framework
 
-### 4.1 Unit Testing Template
+### 4.1 Test Structure Implementation
 
-Unit testing provides automated testing capabilities for systematic validation of code components.
+The unit testing framework includes comprehensive test coverage:
 
-#### File Structure
 ```
 tests/
 ├── __init__.py
-├── test_models/
-│   ├── __init__.py
-│   ├── test_user.py
-│   ├── test_place.py
-│   ├── test_review.py
-│   └── test_amenity.py
-└── test_api/
-    ├── __init__.py
-    └── test_endpoints.py
+├── base_test.py           # Base test class with repository cleanup
+├── test_user.py          # User model and endpoint tests
+├── test_amenity.py       # Amenity model and endpoint tests  
+├── test_place.py         # Place model and endpoint tests
+├── test_review.py        # Review model and endpoint tests
+├── run_all_tests.py      # Test runner for all tests
+└── how_to_run_tests.md   # Test execution instructions
 ```
 
-#### Sample Unit Test Template
+### 4.2 Base Test Implementation (`tests/base_test.py`)
 
-**tests/test_models/test_user.py:**
+**Key Features:**
+- ✅ Repository cleanup between tests
+- ✅ Flask test client setup
+- ✅ Proper test isolation
+
 ```python
-import unittest
-from app.models.user import User
-
-class TestUser(unittest.TestCase):
+class BaseTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app()
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+        self.clear_repositories()
     
-    def test_valid_user_creation(self):
-        """Test creating a user with valid data"""
-        user = User("John", "Doe", "john@example.com")
-        self.assertEqual(user.first_name, "John")
-        self.assertEqual(user.last_name, "Doe")
-        self.assertEqual(user.email, "john@example.com")
-    
-    def test_invalid_email(self):
-        """Test user creation with invalid email"""
-        with self.assertRaises(ValueError):
-            User("John", "Doe", "invalid-email")
-    
-    def test_empty_name(self):
-        """Test user creation with empty name"""
-        with self.assertRaises(ValueError):
-            User("", "Doe", "john@example.com")
-
-if __name__ == '__main__':
-    unittest.main()
+    def clear_repositories(self):
+        facade.user_repo._storage.clear()
+        facade.place_repo._storage.clear()
+        facade.review_repo._storage.clear()
+        facade.amenity_repo._storage.clear()
 ```
 
-#### Running Unit Tests
+### 4.3 User Testing (`tests/test_user.py`)
 
+**Test Coverage:**
+- ✅ `test_create_user_success` - Valid user creation
+- ✅ `test_create_user_invalid_email` - Email validation
+- ✅ `test_create_user_missing_fields` - Required field validation
+- ✅ `test_create_user_duplicate_email` - Duplicate prevention
+- ✅ `test_get_user_by_id` - Individual user retrieval
+- ✅ `test_get_all_users` - User list retrieval
+- ✅ `test_update_user` - User modification
+- ✅ `test_get_nonexistent_user` - 404 handling
+- ✅ `test_user_model_creation` - Direct model testing
+
+### 4.4 Place Testing (`tests/test_place.py`)
+
+**Test Coverage:**
+- ✅ `test_create_place_success` - Valid place creation
+- ✅ `test_create_place_invalid_price` - Price validation
+- ✅ `test_create_place_invalid_coordinates` - Coordinate validation
+- ✅ `test_create_place_invalid_owner` - Owner validation
+- ✅ `test_get_all_places` - Place list retrieval
+- ✅ `test_get_place_by_id` - Place with relationships
+- ✅ `test_update_place` - Place modification
+- ✅ `test_get_nonexistent_place` - 404 handling
+
+### 4.5 Review Testing (`tests/test_review.py`)
+
+**Test Coverage:**
+- ✅ `test_create_review_success` - Valid review creation
+- ✅ `test_create_review_invalid_rating` - Rating validation (0, 6)
+- ✅ `test_create_review_missing_text` - Text requirement
+- ✅ `test_create_review_invalid_user` - User validation
+- ✅ `test_create_review_invalid_place` - Place validation
+- ✅ `test_get_all_reviews` - Review list retrieval
+- ✅ `test_get_review_by_id` - Individual review
+- ✅ `test_update_review` - Review modification
+- ✅ `test_delete_review` - Review deletion
+
+### 4.6 Amenity Testing (`tests/test_amenity.py`)
+
+**Test Coverage:**
+- ✅ `test_create_amenity_success` - Valid amenity creation
+- ✅ `test_create_amenity_missing_name` - Name requirement
+- ✅ `test_get_all_amenities` - Amenity list retrieval
+- ✅ `test_get_amenity_by_id` - Individual amenity
+- ✅ `test_update_amenity` - Amenity modification
+- ✅ `test_get_nonexistent_amenity` - 404 handling
+- ✅ `test_amenity_model_creation` - Direct model testing
+
+### 4.7 Running Unit Tests
+
+**Individual Test Execution:**
 ```bash
-# Run all tests
-python -m unittest discover tests/
-
-# Run specific test file
-python -m unittest tests.test_models.test_user
-
-# Run with verbose output
-python -m unittest discover tests/ -v
+cd hbnb/
+python3 tests/test_user.py
+python3 tests/test_amenity.py
+python3 tests/test_place.py
+python3 tests/test_review.py
 ```
 
-#### Expected Output
+**All Tests Execution:**
+```bash
+cd hbnb/
+python3 tests/run_all_tests.py
 ```
-test_valid_user_creation (tests.test_models.test_user.TestUser) ... ok
-test_invalid_email (tests.test_models.test_user.TestUser) ... ok
-test_empty_name (tests.test_models.test_user.TestUser) ... ok
 
-----------------------------------------------------------------------
-Ran 3 tests in 0.001s
-
-OK
+**Expected Output:**
+```
+Test Summary:
+Tests run: 32
+Failures: 0
+Errors: 0
+Success rate: 100.0%
 ```
 
 ---
@@ -323,7 +360,7 @@ OK
 
 The Flask-RESTx framework automatically generates Swagger documentation available at:
 ```
-http://127.0.0.1:5000/api/v1/
+http://127.0.0.1:5000/
 ```
 
 ### 5.2 Features Verified
@@ -340,7 +377,3 @@ http://127.0.0.1:5000/api/v1/
 - ✅ Places: POST, GET (all), GET (by ID), PUT
 - ✅ Reviews: POST, GET (all), GET (by ID), PUT, DELETE
 - ✅ Amenities: POST, GET (all), GET (by ID), PUT
-
----
-
-**This testing validates that the HBnB API v1 is ready for Part 3 implementation with database persistence and authentication features.**

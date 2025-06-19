@@ -6,7 +6,6 @@
 3. [Postman API Testing](#postman-api-testing)
 4. [Unit Testing Framework](#unit-testing-framework)
 5. [Swagger Documentation](#swagger-documentation)
-6. [Testing Summary](#testing-summary)
 
 ---
 

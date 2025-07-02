@@ -34,14 +34,14 @@ class Login(Resource):
         # Send token back to user
         return {'access_token': access_token}, 200
     
-# Protected endpoint that requires tokens
-@api.route('/protected')
-class ProtectedResource(Resource):
-    @jwt_required() # decorater to look for jwt header, extract token, verify signature using secret key, if token hasn't expired allows request to cont. else returns 401 unauth 
-    def get(self):
-        '''A protected endpoint that requires JWT token'''
-        current_user = get_jwt_identity() # extracts user info from token, just id and is_admin
-        return {
-            'message': f'Hello user {current_user["id"]}!',
-            'user_data': current_user
-        }, 200
+# # Protected endpoint that requires tokens  for testing
+# @api.route('/protected')
+# class ProtectedResource(Resource):
+#     @jwt_required() # decorater to look for jwt header, extract token, verify signature using secret key, if token hasn't expired allows request to cont. else returns 401 unauth 
+#     def get(self):
+#         '''A protected endpoint that requires JWT token'''
+#         current_user = get_jwt_identity() # extracts user info from token, just id and is_admin
+#         return {
+#             'message': f'Hello user {current_user["id"]}!',
+#             'user_data': current_user
+#         }, 200

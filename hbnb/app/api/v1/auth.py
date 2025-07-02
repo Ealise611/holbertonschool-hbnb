@@ -45,3 +45,29 @@ class Login(Resource):
 #             'message': f'Hello user {current_user["id"]}!',
 #             'user_data': current_user
 #         }, 200
+
+@api.route('/create-admin')  # REMOVE THIS IN PRODUCTION!
+class CreateAdmin(Resource):
+    def post(self):
+        """Create first admin user (TEMPORARY - remove in production!)"""
+        admin_data = {
+            'first_name': 'Admin',
+            'last_name': 'User',
+            'email': 'admin@hbnb.io',
+            'password': 'admin123'
+        }
+        
+        # Checks if admin already exists
+        existing_admin = facade.get_user_by_email(admin_data['email'])
+        if existing_admin:
+            return {'error': 'Admin already exists'}, 400
+        
+        # Creates admin user
+        admin_user = facade.create_user(admin_data)
+        admin_user.is_admin = True
+        
+        return {
+            'message': 'Admin user created successfully',
+            'email': admin_user.email,
+            'note': 'Use this email to login and get admin token'
+        }, 201

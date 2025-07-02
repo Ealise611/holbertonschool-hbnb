@@ -19,6 +19,15 @@ profile_model = api.model('UserProfile', {
     'last_name': fields.String(required=True, description='Last name of the user')
 })
 
+# Admin user model (can modify everything including admin status)
+admin_user_model = api.model('AdminUser', {
+    'first_name': fields.String(required=True, description='First name'),
+    'last_name': fields.String(required=True, description='Last name'),
+    'email': fields.String(required=True, description='Email'),
+    'password': fields.String(required=True, description='Password'),
+    'is_admin': fields.Boolean(description='Admin privileges')
+})
+
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model, validate=True)
@@ -80,19 +89,24 @@ class UserResource(Resource):
         }, 200
 
     @jwt_required()
-    @api.expect(profile_model, validate=True)  # Changed user_model → profile_model
+    @api.expect(admin_user_model, validate=True)
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
     @api.response(400, 'Email already registered or invalid input data')
     def put(self, user_id):
         """Update user by ID - ONLY AUTH USER CAN UPDATE THEIR OWN DETAILS"""
         current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin', False)
         
-        # ownership check
-        if current_user['id'] != user_id:
+        # Admins can modify any user, regular users only their own
+        if not is_admin and current_user['id'] != user_id:
             return {'error': 'Unauthorized action'}, 403
         
         data = api.payload
+        
+        # Only admins can change email, password, or admin status
+        if not is_admin and ('email' in data or 'password' in data or 'is_admin' in data):
+            return {'error': 'You cannot modify email, password, or admin status'}, 400
         
         # regular users can't change email or password, redundant but still good to have
         if 'email' in data or 'password' in data:
@@ -102,6 +116,12 @@ class UserResource(Resource):
             user = facade.get_user(user_id)
             if not user:
                 return {'error': 'User not found'}, 404
+            
+            # Admins can change email, check for uniqueness
+            if is_admin and 'email' in data and data['email'] != user.email:
+                existing_user = facade.get_user_by_email(data['email'])
+                if existing_user:
+                    return {'error': 'Email already in use'}, 400
 
             updated_user = facade.update_user(user_id, data)
             if not updated_user:
@@ -113,6 +133,45 @@ class UserResource(Resource):
                 'last_name': updated_user.last_name,
                 'email': updated_user.email
             }, 200
+            
+        except ValueError as e:
+            return {'error': str(e)}, 400
+        except Exception as e:
+            return {'error': 'Invalid input data'}, 400
+
+# ADMIN ONLY USER CREATION
+@api.route('/admin')
+class AdminUserList(Resource):
+    @jwt_required()
+    @api.expect(admin_user_model, validate=True)
+    @api.response(201, 'User created by admin')
+    @api.response(403, 'Admin privileges required')
+    def post(self):
+        """Admin: Create a new user (can set admin privileges)"""
+        current_user = get_jwt_identity()
+        
+        # Check if current user is admin
+        if not current_user.get('is_admin', False):
+            return {'error': 'Admin privileges required'}, 403
+        
+        user_data = api.payload
+
+        try:
+            # Check for duplicate email
+            existing_user = facade.get_user_by_email(user_data['email'])
+            if existing_user:
+                return {'error': 'Email already registered'}, 400
+
+            # Admin can create users with admin privileges
+            new_user = facade.create_user(user_data)
+            
+            return {
+                'id': new_user.id,
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
+                'email': new_user.email,
+                'is_admin': new_user.is_admin
+            }, 201
             
         except ValueError as e:
             return {'error': str(e)}, 400

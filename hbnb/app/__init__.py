@@ -17,7 +17,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     app.config.from_object(config_class) # Loads config settings from config.py
     
     # JWT secret key to "sign" tokens (like a stamp)
-    app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-this-in-production'
+    app.config['JWT_SECRET_KEY'] = 'this-is-our-secret-key-for-hbnb-yay'
     
     # Connect extensions to this flask app
     bcrypt.init_app(app)

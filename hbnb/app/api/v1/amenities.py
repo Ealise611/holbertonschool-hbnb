@@ -24,6 +24,10 @@ class AmenityList(Resource):
         if not current_user.get('is_admin', False):
             return {'error': 'Admin privileges required'}, 403
         
+        existing_amenity = facade.get_amenity_by_name(amenity_data['name'])
+        if existing_amenity:
+            return {'error': 'Amenity already exists'}, 400
+        
         amenity_data = api.payload
         try:
             new_amenity = facade.create_amenity(amenity_data)

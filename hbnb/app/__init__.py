@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restx import Api
+from flask_sqlalchemy import SQLAlchemy
 from app.api.v1.users import api as users_ns
 from app.api.v1.amenities import api as amenities_ns
 from app.api.v1.places import api as places_ns
@@ -11,6 +12,7 @@ from flask_jwt_extended import JWTManager
 # Creates extension instances so they can be used everywhere
 bcrypt = Bcrypt()
 jwt = JWTManager()
+db = SQLAlchemy()
 
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__) # Creates new flask app
@@ -22,6 +24,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     # Connect extensions to this flask app
     bcrypt.init_app(app)
     jwt.init_app(app)
+    db.init_app(app)
     
     # creates restapi attached to the flask
     api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/')

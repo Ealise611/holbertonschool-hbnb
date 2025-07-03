@@ -31,8 +31,28 @@ class User(BaseModel):
         self.first_name = first_name.strip()
         self.last_name = last_name.strip()
         self.email = email.strip()
-        self.password = password or "placeholder_password" # TODO remove password placeholder
         self.is_admin = is_admin
+        
+        if password:
+            self.hash_password(password)
+        else:
+            self.password = None
+            
+    def hash_password(self, password):
+        '''Hashes the password before storing it'''
+        from app import bcrypt # Imports bcrypt INSIDE the method to avoid circular imports
+        if not password or not password.strip():
+            raise ValueError("Password cannot be empty")
+        # hashes the password
+        self.password = bcrypt.generate_password_hash(password.strip()).decode('utf-8')
+        
+    def verify_password(self, password):
+        '''Checks if password matches stored hash'''
+        from app import bcrypt
+        if not password or not self.password:
+            return False
+        # compares the hash to input password
+        return bcrypt.check_password_hash(self.password, password.strip())
 
     def _is_valid_email(self, email):
         if not email or not email.strip():

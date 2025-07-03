@@ -145,9 +145,16 @@ class HBnBFacade:
         place = self.get_place(review_data['place_id'])
         if not place:
             raise ValueError("Place not found")
+        
+        # check if own place
+        if place.owner.id == review_data['user_id']:
+            raise ValueError("You cannot review your own place")
 
         # Check if user has already reviewed this place
-        existing_review = self.get_review_by_user_and_place(review_data['user_id'], review_data['place_id'])
+        existing_review = self.get_review_by_user_and_place(
+            review_data['user_id'],
+            review_data['place_id']
+            )
         if existing_review:
             raise ValueError("User has already reviewed this place")
 

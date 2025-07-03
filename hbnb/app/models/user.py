@@ -18,6 +18,9 @@ class User(BaseModel):
             raise ValueError("Last name is required and be ≤ 50 characters")
         if len(last_name.strip()) > 50:
             raise ValueError("Last name is required and be ≤ 50 characters")
+        
+        if password is not None and (not password or not password.strip()):
+            raise ValueError("Password cannot be empty")
             
         if not email or not email.strip():
             raise ValueError("Invalid email")
@@ -53,11 +56,6 @@ class User(BaseModel):
             return False
         # compares the hash to input password
         return bcrypt.check_password_hash(self.password, password.strip())
-
-        if password:
-            self.hash_password(password.strip())
-        else:
-            self.password = None
 
     def _is_valid_email(self, email):
         if not email or not email.strip():

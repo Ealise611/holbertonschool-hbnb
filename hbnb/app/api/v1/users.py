@@ -9,7 +9,23 @@ api = Namespace('users', description='User operations')
 user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user')
+    'email': fields.String(required=True, description='Email of the user'),
+    'password': fields.String(required=True, description='User password')
+})
+
+# profile update model (no email or pass for regular users)
+profile_model = api.model('UserProfile', {
+    'first_name': fields.String(required=True, description='First name of the user'),
+    'last_name': fields.String(required=True, description='Last name of the user')
+})
+
+# Admin user model (can modify everything including admin status)
+admin_user_model = api.model('AdminUser', {
+    'first_name': fields.String(required=True, description='First name'),
+    'last_name': fields.String(required=True, description='Last name'),
+    'email': fields.String(required=True, description='Email'),
+    'password': fields.String(required=True, description='Password'),
+    'is_admin': fields.Boolean(description='Admin privileges')
 })
 
 

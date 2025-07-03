@@ -136,6 +136,10 @@ class HBnBFacade:
         """Get amenity by name"""
         return self.amenity_repo.get_by_attribute('name', name)
     
+    def get_amenity_by_name(self, name):
+        """Get amenity by name"""
+        return self.amenity_repo.get_by_attribute('name', name)
+    
     # REVIEW FACADE
     def create_review(self, review_data):
         """Create a new review with validation"""

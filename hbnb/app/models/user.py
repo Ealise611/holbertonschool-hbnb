@@ -18,6 +18,9 @@ class User(BaseModel):
             raise ValueError("Last name is required and be ≤ 50 characters")
         if len(last_name.strip()) > 50:
             raise ValueError("Last name is required and be ≤ 50 characters")
+        
+        if password is not None and (not password or not password.strip()):
+            raise ValueError("Password cannot be empty")
             
         if not email or not email.strip():
             raise ValueError("Invalid email")

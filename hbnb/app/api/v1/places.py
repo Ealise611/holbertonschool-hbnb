@@ -123,12 +123,19 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information - OWNER ACCESS ONLY"""
         current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin', False) #get admin status
+
         place = facade.get_place(place_id)
         if not place:
             return{'error': 'Place not found'}, 404
+        
+        #admin can bypass ownership check
+        if not is_admin and place.owner.id != current_user['id']:
+            return {'error': 'Unauthorized action'}, 403
+
         # check ownership
         if place.owner.id != current_user['id']:
-            return {'error': 'Place not found'}, 403
+            return {'error': 'Unauthorized action'}, 403
 
         place_data = api.payload
         

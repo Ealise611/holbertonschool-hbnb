@@ -89,7 +89,7 @@ class UserResource(Resource):
         }, 200
 
     @jwt_required()
-    @api.expect(admin_user_model, validate=True)
+    @api.expect(profile_model) 
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
     @api.response(400, 'Email already registered or invalid input data')
@@ -100,7 +100,7 @@ class UserResource(Resource):
         
         # Admins can modify any user, regular users only their own
         if not is_admin and current_user['id'] != user_id:
-            return {'error': 'Unauthorized action'}, 403
+            return {'error': 'Unauthorised action'}, 403
         
         data = api.payload
         

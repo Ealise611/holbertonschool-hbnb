@@ -133,10 +133,6 @@ class PlaceResource(Resource):
         if not is_admin and place.owner.id != current_user['id']:
             return {'error': 'Unauthorized action'}, 403
 
-        # check ownership
-        if place.owner.id != current_user['id']:
-            return {'error': 'Unauthorized action'}, 403
-
         place_data = api.payload
         
         try:

@@ -108,10 +108,6 @@ class UserResource(Resource):
         if not is_admin and ('email' in data or 'password' in data or 'is_admin' in data):
             return {'error': 'You cannot modify email, password, or admin status'}, 400
         
-        # regular users can't change email or password, redundant but still good to have
-        if 'email' in data or 'password' in data:
-            return {'error': 'You cannot modify email or password'}, 400
-        
         try:
             user = facade.get_user(user_id)
             if not user:

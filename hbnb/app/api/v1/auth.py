@@ -10,7 +10,7 @@ login_model = api.model('Login', {
     'password': fields.String(required=True, description='User password')
 })
 
-#login endpoint tha tcreates tokens
+#login endpoint that creates tokens
 @api.route('/login')
 class Login(Resource):
     @api.expect(login_model)
@@ -24,7 +24,7 @@ class Login(Resource):
         # Check if user exists and pass is correct
         if not user or not user.verify_password(credentials['password']):
             return {'error': 'Invalid credentials'}, 401
-        # Create JWT toekn with user info
+        # Create JWT token with user info
         access_token = create_access_token(
             identity={
                 'id': str(user.id),
@@ -33,18 +33,6 @@ class Login(Resource):
         )
         # Send token back to user
         return {'access_token': access_token}, 200
-    
-# # Protected endpoint that requires tokens  for testing
-# @api.route('/protected')
-# class ProtectedResource(Resource):
-#     @jwt_required() # decorater to look for jwt header, extract token, verify signature using secret key, if token hasn't expired allows request to cont. else returns 401 unauth 
-#     def get(self):
-#         '''A protected endpoint that requires JWT token'''
-#         current_user = get_jwt_identity() # extracts user info from token, just id and is_admin
-#         return {
-#             'message': f'Hello user {current_user["id"]}!',
-#             'user_data': current_user
-#         }, 200
 
 @api.route('/create-admin')  # REMOVE THIS IN PRODUCTION!
 class CreateAdmin(Resource):

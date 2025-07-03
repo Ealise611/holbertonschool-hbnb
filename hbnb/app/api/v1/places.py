@@ -39,7 +39,7 @@ class PlaceList(Resource):
         """Register a new place - USER ONLY - LOGIN REQUIRED"""
         current_user = get_jwt_identity() # get user from token
         place_data = api.payload # Gets the JSON data from the request
-        place_data['owner_id'] = current_user['id'] #Auto set owner toi authenticated user
+        place_data['owner_id'] = current_user['id'] #Auto set owner to authenticated user
 
         try:
             new_place = facade.create_place(place_data)

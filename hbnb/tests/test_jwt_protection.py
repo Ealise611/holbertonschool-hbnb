@@ -2,7 +2,7 @@
 Unit tests for JWT Token Protection on endpoints
 """
 import json
-from base_test import BaseTestCase
+from tests.base_test import BaseTestCase
 
 
 class TestJWTProtection(BaseTestCase):

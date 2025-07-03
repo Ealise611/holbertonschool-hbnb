@@ -13,17 +13,17 @@ class User(BaseModel):
             raise ValueError("First name is required and be ≤ 50 characters")
         if len(first_name.strip()) > 50:
             raise ValueError("First name is required and be ≤ 50 characters")
-            
+
         if not last_name or not last_name.strip():
             raise ValueError("Last name is required and be ≤ 50 characters")
         if len(last_name.strip()) > 50:
             raise ValueError("Last name is required and be ≤ 50 characters")
-            
+
         if not email or not email.strip():
             raise ValueError("Invalid email")
         if not self._is_valid_email(email.strip()):
             raise ValueError("Invalid email")
-            
+
         if password and not password.strip(): 
             raise ValueError("Password cannot be empty")
 
@@ -31,8 +31,12 @@ class User(BaseModel):
         self.first_name = first_name.strip()
         self.last_name = last_name.strip()
         self.email = email.strip()
-        self.password = password or "placeholder_password" # TODO remove password placeholder
         self.is_admin = is_admin
+
+        if password:
+            self.hash_password(password.strip())
+        else:
+            self.password = None
 
     def _is_valid_email(self, email):
         if not email or not email.strip():
@@ -41,8 +45,14 @@ class User(BaseModel):
 
     def hash_password(self, password):
         """Hash the password before storing it. """
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        from app import bcrypt
+        if not password or not password.strip():
+            raise ValueError("Password cannot be empty")
+        self.password = bcrypt.generate_password_hash(password.strip()).decode('utf-8')
 
     def verify_password(self, password):
         """Verify if the provided password matches the hashed password. """
-        return bcrypt.check_password_hash(self.password, password)
+        from app import bcrypt
+        if not password or not password.strip():
+            return False
+        return bcrypt.check_password_hash(self.password, password.strip())

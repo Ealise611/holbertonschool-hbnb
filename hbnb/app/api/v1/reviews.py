@@ -79,13 +79,14 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """Update a review's information - ONLY AUTHOR CAN UPDATE"""
         current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin', False)
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
         
-        #check for ownership
-        if review.user.id != current_user['id']:
-            return  {'error': 'Unauthorised action'}, 403
+        #check for ownership and admin can bypass
+        if not is_admin and review.user.id != current_user['id']:
+            return {'error': 'Unauthorized action'}, 403 
         
         review_data = api.payload
         try:
@@ -105,13 +106,14 @@ class ReviewResource(Resource):
     def delete(self, review_id):
         """Delete a review - ONLY AUTHOR CAN DELETE"""
         current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin', False)
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
         
-        #check for ownership
-        if review.user.id != current_user['id']:
-            return  {'error': 'Unauthorised action'}, 403
+        #check for ownership and admin bypass
+        if not is_admin and review.user.id != current_user['id']:
+            return {'error': 'Unauthorized action'}, 403
         
         success = facade.delete_review(review_id)
         if not success:

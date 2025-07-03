@@ -24,11 +24,13 @@ class AmenityList(Resource):
         if not current_user.get('is_admin', False):
             return {'error': 'Admin privileges required'}, 403
         
+        amenity_data = api.payload
+        
+        #check for duplicate amenity name
         existing_amenity = facade.get_amenity_by_name(amenity_data['name'])
         if existing_amenity:
             return {'error': 'Amenity already exists'}, 400
-        
-        amenity_data = api.payload
+
         try:
             new_amenity = facade.create_amenity(amenity_data)
             return {
@@ -82,11 +84,21 @@ class AmenityResource(Resource):
         if not current_user.get('is_admin', False):
             return {'error': 'Admin privileges required'}, 403
         
+        # Gets the amenity to check if it exists
+        amenity = facade.get_amenity(amenity_id)  # ✅ Add this line
+        if not amenity:
+            return {'error': 'Amenity not found'}, 404
+            
         data = api.payload
+        
+        # Checks for duplicate names
+        if 'name' in data and data['name'] != amenity.name:
+            existing_amenity = facade.get_amenity_by_name(data['name'])
+            if existing_amenity:
+                return {'error': 'Amenity name already exists'}, 400
+
         try:
             updated_amenity = facade.update_amenity(amenity_id, data)
-            if not updated_amenity:
-                return {'error': 'Amenity not found'}, 404
 
             return {
                 'id': updated_amenity.id,

@@ -29,7 +29,7 @@ class BaseTestCase(unittest.TestCase):
     
     def clear_repositories(self):
         """Clear all repository storage"""
-        facade.user_repo._storage.clear()
-        facade.place_repo._storage.clear()
-        facade.review_repo._storage.clear()
-        facade.amenity_repo._storage.clear()
+        facade.user_repository._storage.clear()
+        facade.place_repository._storage.clear()
+        facade.review_repository._storage.clear()
+        facade.amenity_repository._storage.clear()

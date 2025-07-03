@@ -132,6 +132,10 @@ class HBnBFacade:
         self.place_repository.update(place_id, place_data)
         return self.place_repository.get(place_id)
     
+    def get_amenity_by_name(self, name):
+        """Get amenity by name"""
+        return self.amenity_repo.get_by_attribute('name', name)
+    
     # REVIEW FACADE
     def create_review(self, review_data):
         """Create a new review with validation"""
@@ -145,9 +149,16 @@ class HBnBFacade:
         place = self.get_place(review_data['place_id'])
         if not place:
             raise ValueError("Place not found")
+        
+        # check if own place
+        if place.owner.id == review_data['user_id']:
+            raise ValueError("You cannot review your own place")
 
         # Check if user has already reviewed this place
-        existing_review = self.get_review_by_user_and_place(review_data['user_id'], review_data['place_id'])
+        existing_review = self.get_review_by_user_and_place(
+            review_data['user_id'],
+            review_data['place_id']
+            )
         if existing_review:
             raise ValueError("User has already reviewed this place")
 

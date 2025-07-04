@@ -7,7 +7,6 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 # Define the pivot table for the many-to-many relationship between Place and Amenity
-# This table will hold the associations between Place and Amenity
 place_amenity = db.Table('place_amenity',
         db.Column('place_id', db.String(36), db.ForeignKey('place.id'), primary_key=True),
         db.Column('amenity_id', db.String(36), db.ForeignKey('amenity.id'), primary_key=True)

@@ -1,18 +1,32 @@
+import uuid
 from app.models.base_model import BaseModel
 from app import db
 
+def generate_uuid():
+    """Generates a unique identifier for the place."""
+    return str(uuid.uuid4())
+
+# Define the pivot table for the many-to-many relationship between Place and Amenity
+# This table will hold the associations between Place and Amenity
+place_amenity = db.Table('place_amenity',
+        db.Column('place_id', db.String(36), db.ForeignKey('place.id'), primary_key=True),
+        db.Column('amenity_id', db.String(36), db.ForeignKey('amenity.id'), primary_key=True)
+)
+
 class Place(BaseModel):
     # Define SQLAlchemy columns for the Place model
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     # Define relationships
     owner = db.relationship('User', back_populates='places')
     reviews = db.relationship('Review', back_populates='place', cascade='all, delete-orphan')
-    amenities = db.relationship('Amenity', secondary='place_amenity', back_populates='places')
+    amenities = db.relationship('Amenity', secondary=place_amenity, back_populates='places')
+
 
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
@@ -32,6 +46,7 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner = owner
+        self.owner_id = owner.id
         self.reviews = []
         self.amenities = []
     def add_review(self, review):

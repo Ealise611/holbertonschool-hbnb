@@ -1,6 +1,19 @@
 from app.models.base_model import BaseModel
+from app import db
 
 class Place(BaseModel):
+    # Define SQLAlchemy columns for the Place model
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # Define relationships
+    owner = db.relationship('User', back_populates='places')
+    reviews = db.relationship('Review', back_populates='place', cascade='all, delete-orphan')
+    amenities = db.relationship('Amenity', secondary='place_amenity', back_populates='places')
+
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
         if not title or len(title) > 100:

@@ -3,10 +3,15 @@
 import re
 from app.models.base_model import BaseModel
 from app import db
+import uuid
 
+def generate_uuid():
+    """Generates a unique identifier for the user."""
+    return str(uuid.uuid4())
 
 class User(BaseModel):
     # Define SQLAlchemy columns for the User model
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)

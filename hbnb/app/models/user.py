@@ -2,9 +2,21 @@
 
 import re
 from app.models.base_model import BaseModel
+from app import db
 
 
 class User(BaseModel):
+    # Define SQLAlchemy columns for the User model
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=True)  # Password is optional for admin users
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    #define relationships for user
+    places = db.relationship('Place', back_populates='owner', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
+
     def __init__(self, first_name, last_name, email, password=None, is_admin=False): # TODO remove =None later
         super().__init__()
 

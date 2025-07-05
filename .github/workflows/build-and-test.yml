@@ -17,38 +17,17 @@ jobs:
       matrix:
         python-version: ["3.8"]
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.8"
-        
-    - name: Cache pip dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-3.8-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-3.8-
-          
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        
-    - name: Run tests
-      run: |
-        cd tests
-        python run_part3_tests.py
-
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: hbnb
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hbnb_test_db
+          MYSQL_USER: hbnb_test
+          MYSQL_PASSWORD: hbnb_test_pwd
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     
     steps:
     - name: Checkout code
@@ -72,6 +51,71 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
+    - name: Run installation script
+      run: |
+        chmod +x install_prerequisites.sh
+        ./install_prerequisites.sh
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        
+    - name: Run tests
+      run: |
+        cd tests
+        python run_part3_tests.py
+      env:
+        MYSQL_HOST: localhost
+        MYSQL_PORT: 3306
+        MYSQL_USER: hbnb_test
+        MYSQL_PASSWORD: hbnb_test_pwd
+        MYSQL_DATABASE: hbnb_test_db
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hbnb
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hbnb_dev_db
+          MYSQL_USER: hbnb_dev
+          MYSQL_PASSWORD: hbnb_dev_pwd
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.8"
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-3.8-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-3.8-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run installation script
+      run: |
+        chmod +x install_prerequisites.sh
+        ./install_prerequisites.sh
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        
     - name: Build and test Flask app
       run: |
         # Test that the app can be imported and created
@@ -91,4 +135,10 @@ jobs:
         kill $APP_PID
         
         echo "✅ Flask app builds and runs successfully"
+      env:
+        MYSQL_HOST: localhost
+        MYSQL_PORT: 3306
+        MYSQL_USER: hbnb_dev
+        MYSQL_PASSWORD: hbnb_dev_pwd
+        MYSQL_DATABASE: hbnb_dev_db
 

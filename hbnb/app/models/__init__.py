@@ -2,14 +2,15 @@
 
 from .base_model import BaseModel
 from .user import User
+from .amenity import Amenity
 from .place import Place
 from .review import Review
-from .amenity import Amenity
 
+# Make models available when importing from models package
 __all__ = [
-    "BaseModel",
-    "User",
-    "Place",
-    "Review",
-    "Amenity"
+    "BaseModel", 
+    "User", 
+    "Amenity", 
+    "Place", 
+    "Review"
 ]

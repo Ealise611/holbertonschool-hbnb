@@ -2,8 +2,10 @@
 
 import uuid
 from datetime import datetime
+from app import db
 
-class BaseModel:
+class BaseModel(db.Model):
+    __abstract__ = True  # This makes it an abstract base class that won't create a table
     def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()

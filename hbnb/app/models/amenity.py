@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import uuid
 from app.models.base_model import BaseModel
 from app.models.place import place_amenity

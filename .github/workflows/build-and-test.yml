@@ -15,24 +15,24 @@ jobs:
     
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.8"]
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.8"
         
     - name: Cache pip dependencies
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-3.8-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          ${{ runner.os }}-pip-3.8-
           
     - name: Install dependencies
       run: |
@@ -54,18 +54,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up Python 3.12
+    - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
-        python-version: "3.12"
+        python-version: "3.8"
         
     - name: Cache pip dependencies
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-3.12-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-3.8-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-pip-3.12-
+          ${{ runner.os }}-pip-3.8-
           
     - name: Install dependencies
       run: |
@@ -85,9 +85,6 @@ jobs:
         sleep 5
         
         # Test basic health check
-        curl -f http://localhost:5000/ || exit 1
-        
-        # Test API documentation endpoint
         curl -f http://localhost:5000/ || exit 1
         
         # Kill the background process

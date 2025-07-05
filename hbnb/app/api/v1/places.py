@@ -6,10 +6,10 @@ from app.models.place import Place
 api = Namespace('places', description='Place operations')
 
 # Define the models for related entities
-amenity_model = api.model('PlaceAmenity', {
-    'id': fields.String(description='Amenity ID'),
-    'name': fields.String(description='Name of the amenity')
-})
+# amenity_model = api.model('PlaceAmenity', {
+#     'id': fields.String(description='Amenity ID'),
+#     'name': fields.String(description='Name of the amenity')
+# })
 
 user_model = api.model('PlaceUser', {
     'id': fields.String(description='User ID'),

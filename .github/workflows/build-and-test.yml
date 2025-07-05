@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, Main, feat/cicd ]
   pull_request:
-    branches: [ main, Main, feat/cicd ]
+    branches: [ main, Main ]
 
 jobs:
   test:

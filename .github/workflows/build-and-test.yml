@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [ main, Main, feat/cicd ]
+    branches: [ main, Main ]
   pull_request:
     branches: [ main, Main ]
 

@@ -113,12 +113,6 @@ jobs:
         
     - name: Setup MySQL for build
       run: |
-        # Wait for MySQL service to be ready
-        echo "Waiting for MySQL service to be ready..."
-        while ! mysqladmin ping -h"localhost" -P"3306" -u"root" -p"root" --silent; do
-          sleep 1
-        done
-        
         # Create development database
         mysql -h localhost -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_dev_db;"
         mysql -h localhost -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO 'hbnb_dev'@'%' IDENTIFIED BY 'hbnb_dev_pwd';"

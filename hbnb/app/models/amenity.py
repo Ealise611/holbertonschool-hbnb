@@ -10,6 +10,8 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 class Amenity(BaseModel):
+    #create table for amenity
+    __tablename__ = 'amenities'
     # Define SQLAlchemy columns for the Amenity model
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     name = db.Column(db.String(50), nullable=False)

@@ -10,6 +10,8 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 class User(BaseModel):
+    # create table for user
+    __tablename__ = 'users'
     # Define SQLAlchemy columns for the User model
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     first_name = db.Column(db.String(50), nullable=False)

@@ -8,11 +8,13 @@ def generate_uuid():
 
 # Define the pivot table for the many-to-many relationship between Place and Amenity
 place_amenity = db.Table('place_amenity',
-        db.Column('place_id', db.String(36), db.ForeignKey('place.id'), primary_key=True),
-        db.Column('amenity_id', db.String(36), db.ForeignKey('amenity.id'), primary_key=True)
+        db.Column('place_id', db.String(36), db.ForeignKey('places.id'), primary_key=True),
+        db.Column('amenity_id', db.String(36), db.ForeignKey('amenities.id'), primary_key=True)
 )
 
 class Place(BaseModel):
+    #create table for place
+    __tablename__ = 'places'
     # Define SQLAlchemy columns for the Place model
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     title = db.Column(db.String(100), nullable=False)
@@ -20,7 +22,7 @@ class Place(BaseModel):
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     # Define relationships
     owner = db.relationship('User', back_populates='places')
     reviews = db.relationship('Review', back_populates='place', cascade='all, delete-orphan')

@@ -9,6 +9,8 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 class Review(BaseModel):
+    # create table for review
+    __tablename__ = 'reviews'
     # Define SQLAlchemy columns for the Review model
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     text = db.Column(db.String(500), nullable=False)

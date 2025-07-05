@@ -27,6 +27,8 @@ def create_app(config_class="config.DevelopmentConfig"):
     db.init_app(app)
     
     # Import models to register them with SQLAlchemy
+    # Import in order to ensure all tables are registered before creating them
+    from app.models.base_model import BaseModel
     from app.models.user import User
     from app.models.amenity import Amenity
     from app.models.place import Place

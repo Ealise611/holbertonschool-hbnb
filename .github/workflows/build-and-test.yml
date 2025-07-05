@@ -1,0 +1,142 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, Main ]
+  pull_request:
+    branches: [ main, Main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hbnb
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hbnb_db
+          MYSQL_USER: hbnb_test
+          MYSQL_PASSWORD: hbnb_test_pwd
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.8"
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-3.8-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-3.8-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Setup MySQL for tests
+      run: |
+        # Create test database
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE USER IF NOT EXISTS 'hbnb_test'@'%' IDENTIFIED BY 'hbnb_test_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_db.* TO 'hbnb_test'@'%';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
+        
+    - name: Run tests
+      run: |
+        cd tests
+        python run_part3_tests.py
+      env:
+        MYSQL_HOST: 127.0.0.1
+        MYSQL_PORT: 3306
+        MYSQL_USER: hbnb_test
+        MYSQL_PASSWORD: hbnb_test_pwd
+        MYSQL_DATABASE: hbnb_db
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hbnb
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hbnb_db
+          MYSQL_USER: hbnb_dev
+          MYSQL_PASSWORD: hbnb_dev_pwd
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.8"
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-3.8-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-3.8-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Setup MySQL for build
+      run: |
+        # Create development database
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE USER IF NOT EXISTS 'hbnb_dev'@'%' IDENTIFIED BY 'hbnb_dev_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_db.* TO 'hbnb_dev'@'%';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
+        
+    - name: Build and test Flask app
+      run: |
+        # Test that the app can be imported and created
+        python -c "from app import create_app; app = create_app(); print('✅ App created successfully')"
+        
+        # Test that the app can start (run in background)
+        python run.py &
+        APP_PID=$!
+        
+        # Wait for app to start
+        sleep 5
+        
+        # Test basic health check
+        curl -f http://localhost:5000/ || exit 1
+        
+        # Kill the background process
+        kill $APP_PID
+        
+        echo "✅ Flask app builds and runs successfully"
+      env:
+        MYSQL_HOST: 127.0.0.1
+        MYSQL_PORT: 3306
+        MYSQL_USER: hbnb_dev
+        MYSQL_PASSWORD: hbnb_dev_pwd
+        MYSQL_DATABASE: hbnb_db
+

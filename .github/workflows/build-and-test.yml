@@ -50,18 +50,18 @@ jobs:
     - name: Setup MySQL for tests
       run: |
         # Create test database
-        mysql -h localhost -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
-        mysql -h localhost -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_db.* TO 'hbnb_test'@'%' IDENTIFIED BY 'hbnb_test_pwd';"
-        mysql -h localhost -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_test_db;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_test_db.* TO 'hbnb_test'@'%' IDENTIFIED BY 'hbnb_test_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
         
     - name: Run tests
       run: |
         cd tests
         python run_part3_tests.py
       env:
-        MYSQL_HOST: localhost
+        MYSQL_HOST: 127.0.0.1
         MYSQL_PORT: 3306
-        MYSQL_USER: hbnb_db
+        MYSQL_USER: hbnb_test
         MYSQL_PASSWORD: hbnb_test_pwd
         MYSQL_DATABASE: hbnb_test_db
 
@@ -108,9 +108,9 @@ jobs:
     - name: Setup MySQL for build
       run: |
         # Create development database
-        mysql -h localhost -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
-        mysql -h localhost -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_db.* TO 'hbnb_dev'@'%' IDENTIFIED BY 'hbnb_dev_pwd';"
-        mysql -h localhost -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_dev_db;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO 'hbnb_dev'@'%' IDENTIFIED BY 'hbnb_dev_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
         
     - name: Build and test Flask app
       run: |
@@ -132,7 +132,7 @@ jobs:
         
         echo "✅ Flask app builds and runs successfully"
       env:
-        MYSQL_HOST: localhost
+        MYSQL_HOST: 127.0.0.1
         MYSQL_PORT: 3306
         MYSQL_USER: hbnb_dev
         MYSQL_PASSWORD: hbnb_dev_pwd

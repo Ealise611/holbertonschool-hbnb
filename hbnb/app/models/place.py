@@ -1,28 +1,19 @@
 import uuid
 from app.models.base_model import BaseModel
+from app.models.pivot_table import place_amenity
 from app import db
-
-def generate_uuid():
-    """Generates a unique identifier for the place."""
-    return str(uuid.uuid4())
-
-# Define the pivot table for the many-to-many relationship between Place and Amenity
-place_amenity = db.Table('place_amenity',
-        db.Column('place_id', db.String(36), db.ForeignKey('places.id'), primary_key=True),
-        db.Column('amenity_id', db.String(36), db.ForeignKey('amenities.id'), primary_key=True)
-)
 
 class Place(BaseModel):
     #create table for place
     __tablename__ = 'places'
     # Define SQLAlchemy columns for the Place model
-    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
     owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+
     # Define relationships
     owner = db.relationship('User', back_populates='places')
     reviews = db.relationship('Review', back_populates='place', cascade='all, delete-orphan')
@@ -41,6 +32,7 @@ class Place(BaseModel):
             raise ValueError("Longitude must be between -180 and 180")
         if not owner:
             raise ValueError("Owner (User) is required")
+
         self.title = title
         self.description = description
         self.price = price
@@ -48,8 +40,7 @@ class Place(BaseModel):
         self.longitude = longitude
         self.owner = owner
         self.owner_id = owner.id
-        self.reviews = []
-        self.amenities = []
+
     def add_review(self, review):
         self.reviews.append(review)
     def add_amenity(self, amenity):

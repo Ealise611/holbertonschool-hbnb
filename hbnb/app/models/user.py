@@ -1,19 +1,15 @@
 #!/usr/bin/python3
 
 import re
+import uuid
 from app.models.base_model import BaseModel
 from app import db
-import uuid
 
-def generate_uuid():
-    """Generates a unique identifier for the user."""
-    return str(uuid.uuid4())
 
 class User(BaseModel):
     # create table for user
     __tablename__ = 'users'
     # Define SQLAlchemy columns for the User model
-    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -24,7 +20,7 @@ class User(BaseModel):
     places = db.relationship('Place', back_populates='owner', cascade='all, delete-orphan')
     reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
 
-    def __init__(self, first_name, last_name, email, password=None, is_admin=False): # TODO remove =None later
+    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         super().__init__()
 
         # Validate and clean inputs
@@ -37,16 +33,13 @@ class User(BaseModel):
             raise ValueError("Last name is required and be ≤ 50 characters")
         if len(last_name.strip()) > 50:
             raise ValueError("Last name is required and be ≤ 50 characters")
-        
-        if password is not None and (not password or not password.strip()):
-            raise ValueError("Password cannot be empty")
-            
+
         if not email or not email.strip():
             raise ValueError("Invalid email")
         if not self._is_valid_email(email.strip()):
             raise ValueError("Invalid email")
 
-        if password and not password.strip(): 
+        if password is not None and (not password or not password.strip()): 
             raise ValueError("Password cannot be empty")
 
         # Store cleaned values
@@ -80,17 +73,3 @@ class User(BaseModel):
         if not email or not email.strip():
             return False
         return re.match(r"[^@]+@[^@]+\.[^@]+", email.strip()) is not None
-
-    def hash_password(self, password):
-        """Hash the password before storing it. """
-        from app import bcrypt
-        if not password or not password.strip():
-            raise ValueError("Password cannot be empty")
-        self.password = bcrypt.generate_password_hash(password.strip()).decode('utf-8')
-
-    def verify_password(self, password):
-        """Verify if the provided password matches the hashed password. """
-        from app import bcrypt
-        if not password or not password.strip():
-            return False
-        return bcrypt.check_password_hash(self.password, password.strip())

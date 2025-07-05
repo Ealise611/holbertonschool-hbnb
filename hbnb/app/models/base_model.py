@@ -2,15 +2,19 @@
 
 import uuid
 from datetime import datetime
+from app import db
 
-class BaseModel:
-    def __init__(self):
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+class BaseModel(db.Model):
+    """Base model class for all models in the application."""
+    __abstract__ = True  # This class will not create a table in the database
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
 
     def save(self):
         self.updated_at = datetime.now()
+        db.session.commit()
 
     def update(self, data):
         """Update attributes based on input"""
@@ -20,5 +24,6 @@ class BaseModel:
         self.save()
 
     def delete(self):
-        """Placeholder for deleting this object later"""
-        pass
+        """Delete this object from the database."""
+        db.session.delete(self)
+        db.session.commit()

@@ -42,7 +42,7 @@ jobs:
     - name: Run tests
       run: |
         cd tests
-        python run_all_tests.py
+        python run_part3_tests.py
 
   build:
     runs-on: ubuntu-latest

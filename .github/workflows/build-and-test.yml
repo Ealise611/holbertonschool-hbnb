@@ -13,10 +13,6 @@ jobs:
       run:
         working-directory: hbnb
     
-    strategy:
-      matrix:
-        python-version: ["3.8"]
-    
     services:
       mysql:
         image: mysql:8.0

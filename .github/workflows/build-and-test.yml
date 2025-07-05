@@ -50,8 +50,9 @@ jobs:
     - name: Setup MySQL for tests
       run: |
         # Create test database
-        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_test_db;"
-        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_test_db.* TO 'hbnb_test'@'%' IDENTIFIED BY 'hbnb_test_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE USER IF NOT EXISTS 'hbnb_test'@'%' IDENTIFIED BY 'hbnb_test_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_db.* TO 'hbnb_test'@'%';"
         mysql -h 127.0.0.1 -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
         
     - name: Run tests
@@ -63,7 +64,7 @@ jobs:
         MYSQL_PORT: 3306
         MYSQL_USER: hbnb_test
         MYSQL_PASSWORD: hbnb_test_pwd
-        MYSQL_DATABASE: hbnb_test_db
+        MYSQL_DATABASE: hbnb_db
 
   build:
     runs-on: ubuntu-latest
@@ -76,7 +77,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: hbnb_dev_db
+          MYSQL_DATABASE: hbnb_db
           MYSQL_USER: hbnb_dev
           MYSQL_PASSWORD: hbnb_dev_pwd
         ports:
@@ -108,8 +109,9 @@ jobs:
     - name: Setup MySQL for build
       run: |
         # Create development database
-        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_dev_db;"
-        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO 'hbnb_dev'@'%' IDENTIFIED BY 'hbnb_dev_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE USER IF NOT EXISTS 'hbnb_dev'@'%' IDENTIFIED BY 'hbnb_dev_pwd';"
+        mysql -h 127.0.0.1 -P 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON hbnb_db.* TO 'hbnb_dev'@'%';"
         mysql -h 127.0.0.1 -P 3306 -u root -proot -e "FLUSH PRIVILEGES;"
         
     - name: Build and test Flask app
@@ -136,5 +138,5 @@ jobs:
         MYSQL_PORT: 3306
         MYSQL_USER: hbnb_dev
         MYSQL_PASSWORD: hbnb_dev_pwd
-        MYSQL_DATABASE: hbnb_dev_db
+        MYSQL_DATABASE: hbnb_db
 

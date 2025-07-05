@@ -5,3 +5,4 @@ flask-jwt-extended
 sqlalchemy
 pymysql
 flask-sqlalchemy
+cryptography

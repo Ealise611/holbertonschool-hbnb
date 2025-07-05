@@ -15,8 +15,8 @@ class Review(BaseModel):
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     text = db.Column(db.String(500), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    place_id = db.Column(db.String(36), db.ForeignKey('place.id'), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     # Define relationships
     place = db.relationship('Place', back_populates='reviews')
     user = db.relationship('User', back_populates='reviews')

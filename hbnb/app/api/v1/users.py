@@ -28,6 +28,7 @@ admin_user_model = api.model('AdminUser', {
     'is_admin': fields.Boolean(description='Admin privileges')
 })
 
+
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model, validate=True)

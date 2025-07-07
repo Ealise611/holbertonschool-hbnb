@@ -1,11 +1,26 @@
 #!/usr/bin/python3
 
 import re
+import uuid
 from app.models.base_model import BaseModel
+from app import db
 
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, password=None, is_admin=False): # TODO remove =None later
+    # create table for user
+    __tablename__ = 'users'
+    # Define SQLAlchemy columns for the User model
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=True)  # Password is optional for admin users
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    #define relationships for user
+    places = db.relationship('Place', back_populates='owner', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
+
+    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         super().__init__()
 
         # Validate and clean inputs
@@ -13,21 +28,18 @@ class User(BaseModel):
             raise ValueError("First name is required and be ≤ 50 characters")
         if len(first_name.strip()) > 50:
             raise ValueError("First name is required and be ≤ 50 characters")
-            
+
         if not last_name or not last_name.strip():
             raise ValueError("Last name is required and be ≤ 50 characters")
         if len(last_name.strip()) > 50:
             raise ValueError("Last name is required and be ≤ 50 characters")
-        
-        if password is not None and (not password or not password.strip()):
-            raise ValueError("Password cannot be empty")
-            
+
         if not email or not email.strip():
             raise ValueError("Invalid email")
         if not self._is_valid_email(email.strip()):
             raise ValueError("Invalid email")
-            
-        if password and not password.strip(): 
+
+        if password is not None and (not password or not password.strip()): 
             raise ValueError("Password cannot be empty")
 
         # Store cleaned values
@@ -61,4 +73,3 @@ class User(BaseModel):
         if not email or not email.strip():
             return False
         return re.match(r"[^@]+@[^@]+\.[^@]+", email.strip()) is not None
-    

@@ -231,3 +231,4 @@ junit.xml
 pytest_report.html
 test_output/
 test_*.db
+

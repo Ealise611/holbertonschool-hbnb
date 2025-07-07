@@ -182,3 +182,52 @@ Desktop.ini
 # config/local_config.py
 # uploads/
 # logs/
+
+# Testing and Coverage
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+.coverage.*
+*.cover
+*.py,cover
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+nosetests.xml
+coverage.xml
+junit.xml
+pytest_report.html
+test-results/
+test_output/
+pytest_tests/
+conftest.py.bak
+.pytest_warnings
+
+# Test databases
+test_*.db
+*.db-journal
+test_database.sql
+hbnb_pytest_test/
+
+# Additional Pytest files
+pytest_tests/
+conftest.py.bak
+.pytest_warnings
+test-results/
+junit.xml
+pytest_report.html
+test_output/
+test_*.db
+
+# Additional Pytest files
+pytest_tests/
+conftest.py.bak
+.pytest_warnings
+test-results/
+junit.xml
+pytest_report.html
+test_output/
+test_*.db

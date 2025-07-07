@@ -33,18 +33,6 @@ class Login(Resource):
         )
         # Send token back to user
         return {'access_token': access_token}, 200
-    
-# # Protected endpoint that requires tokens  for testing
-# @api.route('/protected')
-# class ProtectedResource(Resource):
-#     @jwt_required() # decorater to look for jwt header, extract token, verify signature using secret key, if token hasn't expired allows request to cont. else returns 401 unauth 
-#     def get(self):
-#         '''A protected endpoint that requires JWT token'''
-#         current_user = get_jwt_identity() # extracts user info from token, just id and is_admin
-#         return {
-#             'message': f'Hello user {current_user["id"]}!',
-#             'user_data': current_user
-#         }, 200
 
 @api.route('/create-admin')  # REMOVE THIS IN PRODUCTION!
 class CreateAdmin(Resource):
@@ -54,20 +42,21 @@ class CreateAdmin(Resource):
             'first_name': 'Admin',
             'last_name': 'User',
             'email': 'admin@hbnb.io',
-            'password': 'admin123'
+            'password': 'admin123',
+            'is_admin': True
         }
         
-        # Checks if admin already exists
         existing_admin = facade.get_user_by_email(admin_data['email'])
         if existing_admin:
             return {'error': 'Admin already exists'}, 400
         
-        # Creates admin user
-        admin_user = facade.create_user(admin_data)
-        admin_user.is_admin = True
-        
-        return {
-            'message': 'Admin user created successfully',
-            'email': admin_user.email,
-            'note': 'Use this email to login and get admin token'
-        }, 201
+        try:
+            admin_user = facade.create_user(admin_data)
+            return {
+                'message': 'Admin user created successfully',
+                'email': admin_user.email,
+                'is_admin': admin_user.is_admin,
+                'note': 'Use email: admin@hbnb.io, password: admin123 to login'
+            }, 201
+        except Exception as e:
+            return {'error': f'Failed to create admin: {str(e)}'}, 500

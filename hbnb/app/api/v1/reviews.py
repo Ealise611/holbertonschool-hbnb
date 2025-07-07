@@ -32,8 +32,17 @@ class ReviewList(Resource):
                 'id': new_review.id,
                 'text': new_review.text,
                 'rating': new_review.rating,
-                'user_id': new_review.user.id,
-                'place_id': new_review.place.id
+                'user': {
+                    'id': new_review.user.id,
+                    'first_name': new_review.user.first_name,
+                    'last_name': new_review.user.last_name,
+                    'email': new_review.user.email
+                },
+                'place': {
+                    'id': new_review.place.id,
+                    'title': new_review.place.title,
+                    'description': new_review.place.description
+                }
             }, 201
         except ValueError as e:
             return {'error': str(e)}, 400
@@ -48,7 +57,18 @@ class ReviewList(Resource):
             {
                 'id': review.id,
                 'text': review.text,
-                'rating': review.rating
+                'rating': review.rating,
+                'user': {
+                    'id': review.user.id,
+                    'first_name': review.user.first_name,
+                    'last_name': review.user.last_name,
+                    'email': review.user.email
+                },
+                'place': {
+                    'id': review.place.id,
+                    'title': review.place.title,
+                    'description': review.place.description
+                }
             }
             for review in reviews
         ], 200
@@ -67,8 +87,17 @@ class ReviewResource(Resource):
             'id': review.id,
             'text': review.text,
             'rating': review.rating,
-            'user_id': review.user.id,
-            'place_id': review.place.id
+            'user': {
+                'id': review.user.id,
+                'first_name': review.user.first_name,
+                'last_name': review.user.last_name,
+                'email': review.user.email
+            },
+            'place': {
+                'id': review.place.id,
+                'title': review.place.title,
+                'description': review.place.description
+            }
         }, 200
 
     @jwt_required()
@@ -94,7 +123,22 @@ class ReviewResource(Resource):
             if not updated_review:
                 return {'error': 'Review not found'}, 404
             
-            return {'message': 'Review updated successfully'}, 200
+            return {
+                'id': updated_review.id,
+                'text': updated_review.text,
+                'rating': updated_review.rating,
+                'user': {
+                    'id': updated_review.user.id,
+                    'first_name': updated_review.user.first_name,
+                    'last_name': updated_review.user.last_name,
+                    'email': updated_review.user.email
+                },
+                'place': {
+                    'id': updated_review.place.id,
+                    'title': updated_review.place.title,
+                    'description': updated_review.place.description
+                }
+            }, 200
         except ValueError as e:
             return {'error': str(e)}, 400
         except Exception as e:
@@ -120,24 +164,5 @@ class ReviewResource(Resource):
             return {'error': 'Review not found'}, 404
         
         return {'message': 'Review deleted successfully'}, 200
-
-@api.route('/places/<place_id>/reviews')
-class PlaceReviewList(Resource):
-    @api.response(200, 'List of reviews for the place retrieved successfully')
-    @api.response(404, 'Place not found')
-    def get(self, place_id):
-        """Get all reviews for a specific place - PUBLIC ACCESS"""
-        place = facade.get_place(place_id)
-        if not place:
-            return {'error': 'Place not found'}, 404
         
-        reviews = facade.get_reviews_by_place(place_id)
-        return [
-            {
-                'id': review.id,
-                'text': review.text,
-                'rating': review.rating,
-                'user_id': review.user.id
-            }
-            for review in reviews
-        ], 200
+    

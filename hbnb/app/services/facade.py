@@ -17,6 +17,12 @@ class HBnBFacade:
         user = User(**user_data)
         self.user_repo.add(user)
         return user
+    
+    def create_admin_user(self, user_data):
+        user_data['is_admin'] = True
+        user = User(**user_data)
+        self.user_repo.add(user)
+        return user
 
     def get_user(self, user_id):
         return self.user_repo.get(user_id)

@@ -5,3 +5,7 @@ flask-jwt-extended
 sqlalchemy
 flask-sqlalchemy
 pymysql
+pytest
+pytest-flask
+pytest-cov
+faker

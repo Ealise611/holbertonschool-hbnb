@@ -13,7 +13,7 @@ class User(BaseModel):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=True)  # Password is optional for admin users
+    password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
     #define relationships for user

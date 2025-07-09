@@ -20,7 +20,7 @@ class User(BaseModel):
     places = db.relationship('Place', back_populates='owner', cascade='all, delete-orphan')
     reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
 
-    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         super().__init__()
 
         # Validate and clean inputs
@@ -39,7 +39,7 @@ class User(BaseModel):
         if not self._is_valid_email(email.strip()):
             raise ValueError("Invalid email")
 
-        if password is not None and (not password or not password.strip()): 
+        if not password or not password.strip():
             raise ValueError("Password cannot be empty")
 
         # Store cleaned values
@@ -48,10 +48,7 @@ class User(BaseModel):
         self.email = email.strip()
         self.is_admin = is_admin
         
-        if password:
-            self.hash_password(password)
-        else:
-            self.password = None
+        self.hash_password(password)
             
     def hash_password(self, password):
         '''Hashes the password before storing it'''

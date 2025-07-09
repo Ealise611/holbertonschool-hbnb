@@ -9,12 +9,17 @@ bcrypt = Bcrypt()
 jwt = JWTManager()
 db = SQLAlchemy()
 
-def create_app(config_class="config.DevelopmentConfig"):
+def create_app(config_class=None):
     app = Flask(__name__) # Creates new flask app
+    if config_class is None:
+        config_class = "config.DevelopmentConfig"
+    elif isinstance(config_class, str) and not config_class.startswith('config'):
+        config_class = f"config.{config_class}"
     app.config.from_object(config_class) # Loads config settings from config.py
     
     # JWT secret key to "sign" tokens (like a stamp)
-    app.config['JWT_SECRET_KEY'] = 'this-is-our-secret-key-for-hbnb-yay'
+    if not app.config.get('JWT_SECRET_KEY'):
+        app.config['JWT_SECRET_KEY'] = 'this-is-our-secret-key-for-hbnb-yay'
     
     # Connect extensions to this flask app
     bcrypt.init_app(app)
@@ -40,10 +45,18 @@ def create_app(config_class="config.DevelopmentConfig"):
             print("📦 Models imported successfully!")
             
             # Test database connection (new SQLAlchemy way)
-            with db.engine.connect() as conn:
-                result = conn.execute(db.text('SELECT 1'))
-                print("✅ Database connection successful!")
-            
+            try:
+                with db.engine.connect() as conn:
+                    result = conn.execute(db.text('SELECT DATABASE()'))
+                    row = result.fetchone()
+                    if row and row[0]:
+                        db_name = row[0]
+                        print(f"✅ Database connection successful to: {db_name}")
+                    else:
+                        print("✅ Database connection successful (no database selected)")
+            except Exception as e:
+                print(f"❌ Database connection failed: {e}")
+                        
             # Create tables
             db.create_all()
             print("✅ db.create_all() executed!")

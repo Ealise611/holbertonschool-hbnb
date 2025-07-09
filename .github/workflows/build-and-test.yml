@@ -58,10 +58,7 @@ jobs:
       run: |
         sudo chmod +x install_prerequisites.sh
         sudo ./install_prerequisites.sh
-        
-    - name: Reset development database
-      run: |
-        python3 database_reset.py --dev
+        pip install requirements.txt
         
     - name: Test Flask app
       run: |

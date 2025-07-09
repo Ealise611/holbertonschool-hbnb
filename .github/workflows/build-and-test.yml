@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: holbertonschool-hbnb
+        working-directory: hbnb
     
     steps:
     - name: Checkout code
@@ -26,6 +26,7 @@ jobs:
       run: |
         sudo chmod +x install_prerequisites.sh
         sudo ./install_prerequisites.sh
+        pip install -r requirements.txt
         
     - name: Setup test database
       run: |
@@ -42,7 +43,7 @@ jobs:
     needs: test
     defaults:
       run:
-        working-directory: holbertonschool-hbnb
+        working-directory: hbnb
     
     steps:
     - name: Checkout code

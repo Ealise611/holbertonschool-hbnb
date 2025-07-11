@@ -192,6 +192,3 @@ conftest.py.bak
 # Testing artifacts
 .pytest_warnings
 pytest_cache/
-
-# Remove this if you want to keep pytest tests in version control
-pytest_tests/

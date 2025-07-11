@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import facade
+from app.utils.decorators import admin_required
 
 api = Namespace('amenities', description='Amenity operations')
 
@@ -13,17 +14,12 @@ amenity_model = api.model('Amenity', {
 @api.route('/')
 class AmenityList(Resource):
     @jwt_required()
+    @admin_required
     @api.expect(amenity_model, validate=True)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new amenity - ADMIN ONLY"""
-        current_user = get_jwt_identity()
-        
-        # check if user is admin
-        if not current_user.get('is_admin', False):
-            return {'error': 'Admin privileges required'}, 403
-        
         amenity_data = api.payload
         
         #check for duplicate amenity name
@@ -78,12 +74,6 @@ class AmenityResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
         """Update an amenity's information - ADMIN ONLY"""
-        current_user = get_jwt_identity()
-        
-        # check for admin rights
-        if not current_user.get('is_admin', False):
-            return {'error': 'Admin privileges required'}, 403
-        
         # Gets the amenity to check if it exists
         amenity = facade.get_amenity(amenity_id)  # ✅ Add this line
         if not amenity:

@@ -2,6 +2,8 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import facade
 from app.models.user import User
+from app.utils.decorators import admin_required
+
 
 api = Namespace('users', description='User operations')
 
@@ -90,6 +92,7 @@ class UserResource(Resource):
         }, 200
 
     @jwt_required()
+    @admin_required
     @api.expect(profile_model) 
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
@@ -140,17 +143,12 @@ class UserResource(Resource):
 @api.route('/admin')
 class AdminUserList(Resource):
     @jwt_required()
+    @admin_required
     @api.expect(admin_user_model, validate=True)
     @api.response(201, 'User created by admin')
     @api.response(403, 'Admin privileges required')
     def post(self):
         """Admin: Create a new user (can set admin privileges)"""
-        current_user = get_jwt_identity()
-        
-        # Check if current user is admin
-        if not current_user.get('is_admin', False):
-            return {'error': 'Admin privileges required'}, 403
-        
         user_data = api.payload
 
         try:

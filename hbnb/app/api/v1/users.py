@@ -92,7 +92,6 @@ class UserResource(Resource):
         }, 200
 
     @jwt_required()
-    @admin_required
     @api.expect(profile_model) 
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
@@ -143,7 +142,6 @@ class UserResource(Resource):
 @api.route('/admin')
 class AdminUserList(Resource):
     @jwt_required()
-    @admin_required
     @api.expect(admin_user_model, validate=True)
     @api.response(201, 'User created by admin')
     @api.response(403, 'Admin privileges required')

@@ -9,4 +9,4 @@ pip install -r requirements.txt
 # Login to MySQL as root
 mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
 mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS hbnb_db;"
-mysql -u root -proot -e "CREATE DATABASE hbnb_pytest_test;"
+mysql -u root -proot -e "CREATE DATABASE hbnb_test_db;"

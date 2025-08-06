@@ -9,3 +9,4 @@ pytest
 pytest-flask
 pytest-cov
 faker
+cryptography

@@ -1,0 +1,94 @@
+/* 
+  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
+  You'll probably need to override some of theese styles.
+*/
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+}
+
+body {
+    background-color: #fefae0;
+    color: #333;
+}
+
+header {
+    background-color: #bc6c25;
+    color: #fff;
+    padding: 1rem;
+}
+
+.login-button {
+    
+}
+
+nav {
+    overflow: hidden;
+    background-color: #bc6c25;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1rem;
+    float: right;
+    font-size: 17px;
+}
+
+main {
+    padding: 2rem;
+}
+
+.column {
+    float: left; 
+    width: 30%;
+    padding: 0 10px;
+    flex: 30%;
+}
+
+.row {
+    display: flex;
+    margin: 0 -5px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.place-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    text-align: center;
+    
+}
+
+.details-button {
+    margin: 20px;
+    padding: 8px ;
+    color: white;
+    background-color: #283618;
+    border: none;
+    border-radius: 8px;
+}
+
+.footer {
+    font-size: small;
+    text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}

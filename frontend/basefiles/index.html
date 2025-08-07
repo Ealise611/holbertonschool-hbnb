@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Places</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <a href="index.html"><img src="images/logo.png" alt="App Logo" class="logo" /></a>
+        <nav>
+            <a href="login.html" class="login-button">Login</a>
+        </nav>
+    </header>
+    <main>
+        <section id="filter">
+            <label for="price-filter">Max Price:</label>
+            <select id="price-filter">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </section>
+        <section id="places-list">
+            <!-- List of places will be populated dynamically -->
+        </section>
+        <div class="row">
+            <div class="column">
+                <div class="place-card">
+                    <h3>Lovely house</h3>
+                    <p>Price per night: $150</p>
+                    <button class="details-button">View Details</button>
+                </div>
+            </div>
+            <div class="column">
+                <div class="place-card">
+                    <h3>Lovely house</h3>
+                    <p>Price per night: $150</p>
+                    <button class="details-button">View Details</button>
+                </div>
+            </div>
+            <div class="column">
+                <div class="place-card">
+                    <h3>Lovely house</h3>
+                    <p>Price per night: $150</p>
+                    <button class="details-button">View Details</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="scripts.js"></script>
+    <footer class="footer">
+        <p>© 2025 HBnB Evolution. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

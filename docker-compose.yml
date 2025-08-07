@@ -1,0 +1,57 @@
+# docker-compose build
+# docker-compose up
+
+
+
+services:
+  # MYSQL SERVICE
+  mysql:
+    image: mysql:8.0
+    container_name: hbnb_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hbnb_db
+      MYSQL_USER: hbnb_user
+      MYSQL_PASSWORD: hbnb_password
+    ports:
+      - "3307:3306"
+    volumes: 
+      - mysql_data:/var/lib/mysql
+      # - ./start_db.sh:/docker-entrypoint-initdb.d/start_db.sh
+    networks:
+      - hbnb_network 
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 60s
+
+  # FLASK SERVICE
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hbnb_flask_app
+    environment:
+      - FLASK_ENV=development
+      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://hbnb_user:hbnb_password@mysql:3306/hbnb_db
+    ports:
+      - "8000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - hbnb_network
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  hbnb_network:
+    driver: bridge

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: hbnb
+        working-directory: backend
     
     steps:
     - name: Checkout code
@@ -43,7 +43,7 @@ jobs:
     needs: test
     defaults:
       run:
-        working-directory: hbnb
+        working-directory: backend
     
     steps:
     - name: Checkout code

@@ -128,3 +128,28 @@ main {
 #login-form button:hover {
     background-color: #0056b3;
 }
+
+/* Review Cards*/
+.review-card {
+    margin: 20px;
+    padding: 10px;
+    border:1px solid #ddd;
+    border-radius: 10px;
+}
+
+
+.star-rating {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.star {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star:hover,
+.star.selected {
+    color: #ffc107; /* Gold color for selected/hovered stars */
+}

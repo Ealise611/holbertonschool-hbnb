@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Place Details</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
-        <a href="index.html"><img src="images/logo.png" alt="app logo" class="logo"></a>
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/logo.png" alt="HBnB Logo" class="logo">
+            </a>
+            <div class="brand-text">HBnB</div>
+        </div>
         <nav>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+            <a href="login.html" id="login-link">Login</a>
         </nav>
     </header>
+
     <main>
         <section id="place-details" class="place-details">
             <!-- Place details will be populated dynamically -->
-             <div class="place-info">
+            <div class="place-info">
                 <p><b>Host: </b>John Doe</p>
                 <p><b>Price per night: </b>$150</p>
                 <p><b>Description: </b>A beautiful beach house with amazing views...</p>
                 <p><b>Amenities: </b>WiFi, Pool, Air Conditioning</p>
-             </div>
+            </div>
         </section>
         <section id="reviews">
             <!-- Reviews will be populated dynamically -->
-             <div class="review-card">
+            <div class="review-card">
                 <p><b>Jane Smith:</b></p>
                 <p>Great place to stay!</p>
                 <p>Rating: ★★★★☆</p>
-             </div>
+            </div>
         </section>
         <section id="add-review" class="add-review">
             <h2>Add a Review</h2>
             <form id="review-form" class="form">
-    <label for="review-text">Review:</label>
-    <textarea id="review-text" name="review-text" required></textarea>
+                <label for="review-text">Review:</label>
+                <textarea id="review-text" name="review-text" required></textarea>
                 <label for="rating">Rating:</label>
                 <select id="rating" name="rating" required>
                     <option value="">Select a rating</option>
@@ -54,4 +62,5 @@
         <p>© 2025 HBnB Evolution. All rights reserved.</p>
     </footer>
 </body>
+
 </html>

@@ -10,21 +10,32 @@
 
 <body>
     <header>
-        <a href="index.html"><img src="images/logo.png" alt="app logo" class="logo"></a>
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/logo.png" alt="HBnB Logo" class="logo">
+            </a>
+            <div class="brand-text">HBnB</div>
+        </div>
         <nav>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+            <a href="login.html" id="login-link">Login</a>
         </nav>
     </header>
     <main>
         <section id="filter">
-            <label for="price-filter">Max Price:</label>
-            <select id="price-filter">
-                <!-- Options will be populated dynamically -->
-            </select>
+            <div class="filter-container">
+                <label for="price-filter">Filter by Price:</label>
+                <select id="price-filter">
+                    <option value="all">All</option>
+                    <option value="10">Up to $10</option>
+                    <option value="50">Up to $50</option>
+                    <option value="100">Up to $100</option>
+                </select>
+            </div>
         </section>
         <section id="places-list">
+            <p>Loading...</p>
             <!-- List of places will be populated dynamically -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="column">
                     <div class="place-card">
                         <h3>Beautiful Beach House</h3>
@@ -46,7 +57,7 @@
                         <button class="details-button">View Details</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </section>
     </main>
     <script src="scripts.js"></script>

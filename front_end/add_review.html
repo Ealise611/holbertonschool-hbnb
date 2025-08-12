@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Review</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
-        <a href="index.html"><img src="images/logo.png" alt="app logo" class="logo"></a>
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/logo.png" alt="HBnB Logo" class="logo">
+            </a>
+            <div class="brand-text">HBnB</div>
+        </div>
         <nav>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+            <a href="login.html" id="login-link">Login</a>
         </nav>
     </header>
+
     <main>
         <!-- Add something to idfentify the place you're reviewing -->
         <form id="review-form">
@@ -20,14 +28,14 @@
             <label for="review">Your Review:</label>
             <textarea id="review" name="review" required></textarea>
             <label for="rating">Rating:</label>
-                <select id="rating" name="rating" required>
-                    <option value="">Select a rating</option>
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                </select>
+            <select id="rating" name="rating" required>
+                <option value="">Select a rating</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
             <button type="submit">Submit Review</button>
         </form>
     </main>
@@ -36,4 +44,5 @@
         <p>© 2025 HBnB Evolution. All rights reserved.</p>
     </footer>
 </body>
+
 </html>

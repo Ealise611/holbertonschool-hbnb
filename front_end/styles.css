@@ -1,155 +1,437 @@
-/* 
-  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
-  You'll probably need to override some of theese styles.
-*/
-
+/* Reset and Base Styles */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
 }
 
 body {
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #2c3e50;
+    line-height: 1.4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/*HEADER STYLES*/
+
 header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 2;
+    position: relative;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    backdrop-filter: blur(10px);
+}
+
+.brand-text {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+nav {
+    z-index: 2;
+    position: relative;
 }
 
 nav a {
-    color: #fff;
+    color: white;
     text-decoration: none;
-    margin-left: 1rem;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 14px;
 }
+
+nav a:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+/*MAIN CONTENT*/
 
 main {
-    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    flex: 1;
 }
 
-/* Place Cards - Required Fixed Parameters */
-.place-card {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    /* Add your flexible styling below */
+h1 {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/*FILTER SECTION*/
+
+#filter {
+    text-align: center;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+#filter label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-right: 10px;
+}
+
+#price-filter {
+    padding: 10px 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    font-size: 14px;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Layout for the cards */
+#price-filter:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/*PLACES LAYOUT*/
+
+#places-list {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .row {
     display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
 .column {
     flex: 1;
-    max-width: 300px;
-    min-width: 250px;
+    min-width: 280px;
+    max-width: 350px;
+    display: flex;
 }
 
-/* Style the details button */
-.details-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
+/*PLACE CARDS*/
+
+.place-card {
+    /* REQUIRED FIXED PARAMETERS */
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #e1e8ed;
+    border-radius: 10px;
+    
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
 }
 
-.details-button:hover {
-    background-color: #0056b3;
+.place-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Style the place card text */
 .place-card h3 {
-    margin-top: 0;
-    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    margin-top: 10px;
 }
 
 .place-card p {
-    margin: 10px 0;
-    font-weight: bold;
-    color: #666;
+    font-size: 14px;
+    color: #5a6c7d;
+    margin-bottom: 15px;
 }
 
-/* Login Form Styling */
+.place-card .button-container {
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+/*BUTTONS*/
+
+.details-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    min-width: auto;
+    width: auto;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.details-button:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+/*LOGIN FORM */
+
 #login-form {
     max-width: 400px;
     margin: 50px auto;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     padding: 30px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e1e8ed;
+    backdrop-filter: blur(10px);
 }
 
 #login-form h2 {
     text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    font-size: 24px;
 }
 
 #login-form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #555;
+    color: #2c3e50;
+    font-size: 14px;
 }
 
 #login-form input {
     width: 100%;
-    padding: 10px;
+    padding: 12px 15px;
     margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #f8f9fa;
+}
+
+#login-form input:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 #login-form button {
     width: 100%;
-    padding: 12px;
-    background-color: #007bff;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 #login-form button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
-/* Review Cards*/
+/*REVIEW CARDS*/
+
 .review-card {
+    /* REQUIRED FIXED PARAMETERS */
     margin: 20px;
     padding: 10px;
-    border:1px solid #ddd;
+    border: 1px solid #e1e8ed;
     border-radius: 10px;
+    
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
+.review-card p {
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #5a6c7d;
+}
+
+.review-card p:first-child {
+    font-weight: bold;
+    color: #2c3e50;
+}
 
 .star-rating {
-    font-size: 24px;
-    margin: 10px 0;
+    font-size: 18px;
+    color: #f39c12;
+    margin: 5px 0;
 }
 
 .star {
     color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s;
 }
 
-.star:hover,
 .star.selected {
-    color: #ffc107; /* Gold color for selected/hovered stars */
+    color: #f39c12;
+}
+
+/*MESSAGES*/
+
+.error-message {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    font-weight: 500;
+}
+
+.success-message {
+    background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+    color: white;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
+    font-weight: 500;
+}
+
+/*FOOTER*/
+
+.footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+    font-size: 14px;
+    margin: 5px 0;
+    opacity: 0.9;
+}
+
+/*RESPONSIVE*/
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .column {
+        flex: none;
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    main {
+        padding: 20px 10px;
+    }
+    
+    h1 {
+        font-size: 28px;
+    }
+    
+    header {
+        padding: 10px 15px;
+    }
+    
+    #places-list {
+        padding: 0 10px;
+    }
+    
+    #filter {
+        margin: 20px 10px 30px 10px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .place-card {
+        margin: 10px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    #login-form {
+        margin: 20px 10px;
+        padding: 20px;
+    }
 }

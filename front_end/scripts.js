@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuthentication();
 });
 
-
 // TASK 1 - login form
-
-// Function to handle the API request
 async function loginUser(email, password) {
   try {
     const response = await fetch('http://localhost:5000/api/v1/auth/login', {
@@ -38,10 +35,9 @@ async function loginUser(email, password) {
   }
 }
 
-// TASK 2  - index.html
+// TASK 2 - index.html
 
 function getCookie(name) {
-
   const cookies = document.cookie.split(';');
   let foundToken = null;
 
@@ -55,7 +51,6 @@ function getCookie(name) {
 }
 
 function checkAuthentication() {
-
   const token = getCookie('token');
   const loginLink = document.getElementById('login-link');
 
@@ -72,7 +67,6 @@ function checkAuthentication() {
     loginLink.style.display = 'none';
     fetchPlaces(token);
   }
-
 }
 
 async function fetchPlaces(token = null) {
@@ -149,48 +143,27 @@ function displayPlaces(places) {
     column.className = 'column';
 
     const placeCard = document.createElement('div');
-    placeCard.className = 'place-card'
+    placeCard.className = 'place-card';
+
     placeCard.setAttribute('data-price', place.price || 0);
 
     placeCard.innerHTML = `
-  <h3>${place.title || 'Unknown place'}</h3>
-  <p>Price per night: $${place.price || 'N/A'}</p>
-  <div class="button-container">
-    <button class="details-button" onclick="viewPlaceDetails('${place.id}')">View Details</button>
-  </div>
-`;
+      <h3>${place.title || 'Unknown place'}</h3>
+      <p>Price per night: $${place.price || 'N/A'}</p>
+      <div class="button-container">
+        <button class="details-button" onclick="viewPlaceDetails('${place.id}')">View Details</button>
+      </div>
+    `;
+
     column.appendChild(placeCard);
     row.appendChild(column);
-
   });
+
   placesContainer.appendChild(row);
-}
 
-function setupPriceFilter(places) {
-  const filterSelect = document.getElementById('price-filter');
-  if (!filterSelect) {
-    return;
-  }
-
-  if (filterSelect.children.length === 0) {
-    const options = [
-      { value: 'all', text: 'All' },
-      { value: '10', text: 'Up to $10' },
-      { value: '50', text: 'Up to $50' },
-      { value: '100', text: 'Up to $100' }
-    ];
-
-    options.forEach(option => {
-      const optionElement = document.createElement('option');
-      optionElement.value = option.value;
-      optionElement.textContent = option.text;
-      filterSelect.appendChild(optionElement);
-    });
-
-    filterSelect.addEventListener('change', (event) => {
-      const selectedPrice = event.target.value;
-      filterPlacesByPrice(selectedPrice);
-    });
+  const currentFilter = document.getElementById('price-filter').value;
+  if (currentFilter !== 'all') {
+    filterPlacesByPrice(currentFilter);
   }
 }
 
@@ -200,38 +173,31 @@ function initializePriceFilter() {
     return;
   }
 
-  if (filterSelect.children.length === 0) {
-    const options = [
-      { value: 'all', text: 'All' },
-      { value: '10', text: 'Up to $10' },
-      { value: '50', text: 'Up to $50' },
-      { value: '100', text: 'Up to $100' }
-    ];
-
-    options.forEach(option => {
-      const optionElement = document.createElement('option');
-      optionElement.value = option.value;
-      optionElement.textContent = option.text;
-      filterSelect.appendChild(optionElement);
-    });
-
-    filterSelect.addEventListener('change', (event) => {
-      const selectedPrice = event.target.value;
-      filterPlacesByPrice(selectedPrice);
-    });
-  }
+  // Only set up the event listener once
+  filterSelect.addEventListener('change', (event) => {
+    const selectedPrice = event.target.value;
+    console.log('Filter changed to:', selectedPrice);
+    filterPlacesByPrice(selectedPrice);
+  });
 }
 
+// FIXED: Improved filter function
 function filterPlacesByPrice(maxPrice) {
+  console.log('Filtering by max price:', maxPrice);
+
   const placeCards = document.querySelectorAll('.place-card');
+  console.log('Found place cards:', placeCards.length);
 
   placeCards.forEach(card => {
     const placePrice = parseFloat(card.getAttribute('data-price')) || 0;
+    console.log('Place price:', placePrice, 'Max price:', maxPrice);
+
+    const column = card.parentElement;
 
     if (maxPrice === 'all' || placePrice <= parseFloat(maxPrice)) {
-      card.parentElement.style.display = 'block';
+      column.style.display = 'block';
     } else {
-      card.parentElement.style.display = 'none';
+      column.style.display = 'none';
     }
   });
 }
@@ -241,11 +207,11 @@ function viewPlaceDetails(placeId) {
 }
 
 function showError(message) {
-
   const existingError = document.getElementById('error-message');
   if (existingError) {
     existingError.remove();
   }
+
   const errorDiv = document.createElement('div');
   errorDiv.id = 'error-message';
   errorDiv.className = 'error-message';
@@ -269,7 +235,6 @@ function showError(message) {
     document.body.insertBefore(errorDiv, document.body.firstChild);
   }
 
-  // Auto-hide after 5 seconds
   setTimeout(() => {
     if (errorDiv.parentNode) {
       errorDiv.remove();

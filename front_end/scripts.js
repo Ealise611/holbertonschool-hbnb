@@ -103,7 +103,7 @@ async function fetchPlaces(token) {
     }
 
     const places = await response.json();
-    console.log('✅ Success:', places);
+    console.log('Success:', places);
     displayPlaces(places);
 
   } catch (error) {
@@ -123,7 +123,7 @@ console.log('Current token:', getCookie('token'));
 
 // Test when page loads
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 Page loaded - checking authentication');
+  console.log('Page loaded - checking authentication');
   const token = checkAuthentication();
   console.log('Auth result:', token ? 'Authenticated' : 'Not authenticated');
 });

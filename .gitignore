@@ -192,3 +192,4 @@ conftest.py.bak
 # Testing artifacts
 .pytest_warnings
 pytest_cache/
+hbnb.session.sql

@@ -3,6 +3,7 @@ from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 # Creates extension instances so they can be used everywhere
 bcrypt = Bcrypt()
@@ -11,6 +12,9 @@ db = SQLAlchemy()
 
 def create_app(config_class=None):
     app = Flask(__name__) # Creates new flask app
+    
+    # CORS support for frontend
+    CORS(app, origins=["http://127.0.0.1:3001", "http://localhost:3001", "http://127.0.0.1:5500", "file://"])
     if config_class is None:
         config_class = "config.DevelopmentConfig"
     elif isinstance(config_class, str) and not config_class.startswith('config'):

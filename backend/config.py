@@ -6,7 +6,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@localhost/hbnb_db'
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'mysql+pymysql://hbnb_user:hbnb_password@localhost:3307/hbnb_db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 class TestingConfig(Config):

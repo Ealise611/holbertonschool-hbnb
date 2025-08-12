@@ -28,15 +28,23 @@
              <div class="review-card">
                 <p><b>Jane Smith:</b></p>
                 <p>Great place to stay!</p>
-                <p>Rating: star rating here</p>
+                <p>Rating: ★★★★☆</p>
              </div>
         </section>
         <section id="add-review" class="add-review">
             <h2>Add a Review</h2>
             <form id="review-form" class="form">
-                <label for="review-text">Review:</label>
-                <textarea id="review-text" name="review-text" required></textarea>
-                
+    <label for="review-text">Review:</label>
+    <textarea id="review-text" name="review-text" required></textarea>
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="">Select a rating</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
                 <button type="submit">Submit</button>
             </form>
         </section>

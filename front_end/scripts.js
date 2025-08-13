@@ -195,7 +195,7 @@ function filterPlacesByPrice(maxPrice) {
     const column = card.parentElement;
 
     if (maxPrice === 'all' || placePrice <= parseFloat(maxPrice)) {
-      column.style.display = 'block';
+      column.style.display = 'flex';
     } else {
       column.style.display = 'none';
     }

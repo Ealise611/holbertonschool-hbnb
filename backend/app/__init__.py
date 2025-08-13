@@ -10,32 +10,41 @@ bcrypt = Bcrypt()
 jwt = JWTManager()
 db = SQLAlchemy()
 
+
 def create_app(config_class=None):
-    app = Flask(__name__) # Creates new flask app
-    
+    app = Flask(__name__)  # Creates new flask app
+
     # CORS support for frontend
-    CORS(app, origins=["http://127.0.0.1:3001", "http://localhost:3001", "http://127.0.0.1:5500", "file://"])
+    CORS(
+        app,
+        origins=[
+            "http://127.0.0.1:3001",
+            "http://localhost:3001",
+            "http://127.0.0.1:5500",
+            "file://",
+        ],
+    )
     if config_class is None:
         config_class = "config.DevelopmentConfig"
-    elif isinstance(config_class, str) and not config_class.startswith('config'):
+    elif isinstance(config_class, str) and not config_class.startswith("config"):
         config_class = f"config.{config_class}"
-    app.config.from_object(config_class) # Loads config settings from config.py
-    
+    app.config.from_object(config_class)  # Loads config settings from config.py
+
     # JWT secret key to "sign" tokens (like a stamp)
-    if not app.config.get('JWT_SECRET_KEY'):
-        app.config['JWT_SECRET_KEY'] = 'this-is-our-secret-key-for-hbnb-yay'
-    
+    if not app.config.get("JWT_SECRET_KEY"):
+        app.config["JWT_SECRET_KEY"] = "this-is-our-secret-key-for-hbnb-yay"
+
     # Connect extensions to this flask app
     bcrypt.init_app(app)
     jwt.init_app(app)
     db.init_app(app)
-    
+
     # Create database tables
     with app.app_context():
         try:
             print("🔍 Creating database tables...")
             print(f"🔗 Database URI: {app.config.get('SQLALCHEMY_DATABASE_URI')}")
-            
+
             # import pivot tables
             print("📦 Importing pivot tables...")
             from app.models.pivot_table import place_amenity
@@ -46,27 +55,31 @@ def create_app(config_class=None):
             from app.models.amenity import Amenity
             from app.models.place import Place
             from app.models.review import Review
+
             print("📦 Models imported successfully!")
-            
+
             # Test database connection (new SQLAlchemy way)
             try:
                 with db.engine.connect() as conn:
-                    result = conn.execute(db.text('SELECT DATABASE()'))
+                    result = conn.execute(db.text("SELECT DATABASE()"))
                     row = result.fetchone()
                     if row and row[0]:
                         db_name = row[0]
                         print(f"✅ Database connection successful to: {db_name}")
                     else:
-                        print("✅ Database connection successful (no database selected)")
+                        print(
+                            "✅ Database connection successful (no database selected)"
+                        )
             except Exception as e:
                 print(f"❌ Database connection failed: {e}")
-                        
+
             # Create tables
             db.create_all()
             print("✅ db.create_all() executed!")
-            
+
             # Check what tables were created
             from sqlalchemy import inspect
+
             inspector = inspect(db.engine)
             tables = inspector.get_table_names()
             print(f"✅ Tables in database: {tables}")
@@ -74,6 +87,7 @@ def create_app(config_class=None):
         except Exception as e:
             print(f"❌ Error during table creation: {e}")
             import traceback
+
             traceback.print_exc()
 
     # Import namespaces after app context is established
@@ -85,13 +99,19 @@ def create_app(config_class=None):
     from app.api.v1.auth import api as auth_ns
 
     # creates restapi attached to the flask
-    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/')
+    api = Api(
+        app,
+        version="1.0",
+        title="HBnB API",
+        description="HBnB Application API",
+        doc="/",
+    )
 
     # Register all namespaces
-    api.add_namespace(users_ns, path='/api/v1/users')
-    api.add_namespace(amenities_ns, path='/api/v1/amenities')
-    api.add_namespace(places_ns, path='/api/v1/places')
-    api.add_namespace(reviews_ns, path='/api/v1/reviews')
-    api.add_namespace(auth_ns, path='/api/v1/auth')
-    
+    api.add_namespace(users_ns, path="/api/v1/users")
+    api.add_namespace(amenities_ns, path="/api/v1/amenities")
+    api.add_namespace(places_ns, path="/api/v1/places")
+    api.add_namespace(reviews_ns, path="/api/v1/reviews")
+    api.add_namespace(auth_ns, path="/api/v1/auth")
+
     return app

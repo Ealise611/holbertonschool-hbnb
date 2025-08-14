@@ -435,3 +435,9 @@ h1 {
         padding: 20px;
     }
 }
+
+#places-details .place {
+    background-color: #667eea;
+    border-radius: 7px;
+    padding: 3%;
+}

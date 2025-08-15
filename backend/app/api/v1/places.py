@@ -1,184 +1,197 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
 from app.models.place import Place
 
-api = Namespace('places', description='Place operations')
+api = Namespace("places", description="Place operations")
 
 # Define the models for related entities
-amenity_model = api.model('PlaceAmenity', {
-    'id': fields.String(description='Amenity ID'),
-    'name': fields.String(description='Name of the amenity')
-})
+amenity_model = api.model(
+    "PlaceAmenity",
+    {
+        "id": fields.String(description="Amenity ID"),
+        "name": fields.String(description="Name of the amenity"),
+    },
+)
 
-user_model = api.model('PlaceUser', {
-    'id': fields.String(description='User ID'),
-    'first_name': fields.String(description='First name of the owner'),
-    'last_name': fields.String(description='Last name of the owner'),
-    'email': fields.String(description='Email of the owner')
-})
+user_model = api.model(
+    "PlaceUser",
+    {
+        "id": fields.String(description="User ID"),
+        "first_name": fields.String(description="First name of the owner"),
+        "last_name": fields.String(description="Last name of the owner"),
+        "email": fields.String(description="Email of the owner"),
+    },
+)
 
 # Define the place model for input validation and documentation
-place_model = api.model('Place', {
-    'title': fields.String(required=True, description='Title of the place'),
-    'description': fields.String(description='Description of the place'),
-    'price': fields.Float(required=True, description='Price per night'),
-    'latitude': fields.Float(required=True, description='Latitude of the place'),
-    'longitude': fields.Float(required=True, description='Longitude of the place'),
-    'amenities': fields.List(fields.String, required=False, description="List of amenities ID's")
-})
+place_model = api.model(
+    "Place",
+    {
+        "title": fields.String(required=True, description="Title of the place"),
+        "description": fields.String(description="Description of the place"),
+        "price": fields.Float(required=True, description="Price per night"),
+        "latitude": fields.Float(required=True, description="Latitude of the place"),
+        "longitude": fields.Float(required=True, description="Longitude of the place"),
+        "amenities": fields.List(
+            fields.String, required=False, description="List of amenities ID's"
+        ),
+    },
+)
 
-@api.route('/') # handles /api/v1/places/
+
+@api.route("/")  # handles /api/v1/places/
 class PlaceList(Resource):
     @jwt_required()
     @api.expect(place_model, validate=True)
-    @api.response(201, 'Place successfully created')
-    @api.response(400, 'Owner not found')
-    @api.response(401, 'Authentication required')
+    @api.response(201, "Place successfully created")
+    @api.response(400, "Owner not found")
+    @api.response(401, "Authentication required")
     def post(self):
         """Register a new place - USER ONLY - LOGIN REQUIRED"""
-        current_user = get_jwt_identity() # get user from token
-        place_data = api.payload # Gets the JSON data from the request
-        place_data['owner_id'] = current_user['id'] #Auto set owner toi authenticated user
+        current_user_id = get_jwt_identity()
+        place_data = api.payload
+        place_data["owner_id"] = current_user_id
 
         try:
             new_place = facade.create_place(place_data)
             return {
-                'id': new_place.id,
-                'title': new_place.title,
-                'description': new_place.description,
-                'price': new_place.price,
-                'latitude': new_place.latitude,
-                'longitude': new_place.longitude,
-                'owner_id': new_place.owner.id
+                "id": new_place.id,
+                "title": new_place.title,
+                "description": new_place.description,
+                "price": new_place.price,
+                "latitude": new_place.latitude,
+                "longitude": new_place.longitude,
+                "owner_id": new_place.owner.id,
             }, 201
         except ValueError as e:
-            return {'error': str(e)}, 400
+            return {"error": str(e)}, 400
         except Exception as e:
-            return {'error': 'Invalid input data'}, 400
+            return {"error": "Invalid input data"}, 400
 
-    @api.response(200, 'List of places retrieved successfully')
+    @api.response(200, "List of places retrieved successfully")
     def get(self):
         """Retrieve a list of all places - PUBLIC ACCESS"""
         places = facade.get_all_places()
         return [
             {
-                'id': place.id,
-                'title': place.title,
-                'description': place.description,
-                'price': place.price,
-                'latitude': place.latitude,
-                'longitude': place.longitude
+                "id": place.id,
+                "title": place.title,
+                "description": place.description,
+                "price": place.price,
+                "latitude": place.latitude,
+                "longitude": place.longitude,
             }
-            for place in places # Uses a list comprehension to transform each place object into a dictionary
+            for place in places  # Uses a list comprehension to transform each place object into a dictionary
         ], 200
 
-@api.route('/<place_id>') # Handles /api/v1/places/[place_id]
+
+@api.route("/<place_id>")  # Handles /api/v1/places/[place_id]
 class PlaceResource(Resource):
-    @api.response(200, 'Place details retrieved successfully')
-    @api.response(404, 'Place not found')
+    @api.response(200, "Place details retrieved successfully")
+    @api.response(404, "Place not found")
     def get(self, place_id):
         """Get place details by ID - PUBLIC ACCESS"""
         place = facade.get_place(place_id)
         if not place:
-            return {'error': 'Place not found'}, 404
-        
+            return {"error": "Place not found"}, 404
+
         # Get reviews for this place
         reviews = facade.get_reviews_by_place(place_id)
-        
+
         return {
-            'id': place.id,
-            'title': place.title,
-            'description': place.description,
-            'price': place.price,
-            'latitude': place.latitude,
-            'longitude': place.longitude,
-            'owner': {
-                'id': place.owner.id,
-                'first_name': place.owner.first_name,
-                'last_name': place.owner.last_name,
-                'email': place.owner.email
+            "id": place.id,
+            "title": place.title,
+            "description": place.description,
+            "price": place.price,
+            "latitude": place.latitude,
+            "longitude": place.longitude,
+            "owner": {
+                "id": place.owner.id,
+                "first_name": place.owner.first_name,
+                "last_name": place.owner.last_name,
+                "email": place.owner.email,
             },
-            'amenities': [
-                {
-                    'id': amenity.id,
-                    'name': amenity.name
-                }
-                for amenity in place.amenities
+            "amenities": [
+                {"id": amenity.id, "name": amenity.name} for amenity in place.amenities
             ],
-            'reviews': [
+            "reviews": [
                 {
-                    'id': review.id,
-                    'text': review.text,
-                    'rating': review.rating,
-                    'user_id': review.user.id
+                    "id": review.id,
+                    "text": review.text,
+                    "rating": review.rating,
+                    "user_id": review.user.id,
                 }
                 for review in reviews
-            ]
+            ],
         }, 200
 
     @jwt_required()
     @api.expect(place_model)
-    @api.response(200, 'Place updated successfully')
-    @api.response(404, 'Place not found')
-    @api.response(403, 'Unauthorised action')
+    @api.response(200, "Place updated successfully")
+    @api.response(404, "Place not found")
+    @api.response(403, "Unauthorised action")
     def put(self, place_id):
         """Update a place's information - OWNER ACCESS ONLY"""
-        current_user = get_jwt_identity()
-        is_admin = current_user.get('is_admin', False) #get admin status
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get("is_admin", False)
 
         place = facade.get_place(place_id)
         if not place:
-            return{'error': 'Place not found'}, 404
-        
-        #admin can bypass ownership check
-        if not is_admin and place.owner.id != current_user['id']:
-            return {'error': 'Unauthorized action'}, 403
+            return {"error": "Place not found"}, 404
+
+        # admin can bypass ownership check
+        if not is_admin and place.owner.id != current_user_id:
+            return {"error": "Unauthorized action"}, 403
 
         place_data = api.payload
-        
+
         try:
             updated_place = facade.update_place(place_id, place_data)
-            if not updated_place: # Checks if the place was found (facade returns None if not found)
-                return {'error': 'Place not found'}, 404
-            
+            if (
+                not updated_place
+            ):  # Checks if the place was found (facade returns None if not found)
+                return {"error": "Place not found"}, 404
+
             # Returns the updated place data
             return {
-                'id': updated_place.id,
-                'title': updated_place.title,
-                'description': updated_place.description,
-                'price': updated_place.price,
-                'latitude': updated_place.latitude,
-                'longitude': updated_place.longitude,
-                'owner_id': updated_place.owner.id
+                "id": updated_place.id,
+                "title": updated_place.title,
+                "description": updated_place.description,
+                "price": updated_place.price,
+                "latitude": updated_place.latitude,
+                "longitude": updated_place.longitude,
+                "owner_id": updated_place.owner.id,
             }, 200
         except ValueError as e:
-            return {'error': str(e)}, 400
+            return {"error": str(e)}, 400
         except Exception as e:
-            return {'error': 'Invalid input data'}, 400
-        
-@api.route('/<place_id>/reviews')
+            return {"error": "Invalid input data"}, 400
+
+
+@api.route("/<place_id>/reviews")
 class PlaceReviews(Resource):
-    @api.response(200, 'List of reviews for the place retrieved successfully')
-    @api.response(404, 'Place not found')
+    @api.response(200, "List of reviews for the place retrieved successfully")
+    @api.response(404, "Place not found")
     def get(self, place_id):
         """Get all reviews for a specific place - PUBLIC ACCESS"""
         place = facade.get_place(place_id)
         if not place:
-            return {'error': 'Place not found'}, 404
-        
+            return {"error": "Place not found"}, 404
+
         reviews = facade.get_reviews_by_place(place_id)
         return [
             {
-                'id': review.id,
-                'text': review.text,
-                'rating': review.rating,
-                'user': {
-                    'id': review.user.id,
-                    'first_name': review.user.first_name,
-                    'last_name': review.user.last_name,
-                    'email': review.user.email
-                }
+                "id": review.id,
+                "text": review.text,
+                "rating": review.rating,
+                "user": {
+                    "id": review.user.id,
+                    "first_name": review.user.first_name,
+                    "last_name": review.user.last_name,
+                    "email": review.user.email,
+                },
             }
             for review in reviews
         ], 200

@@ -11,3 +11,4 @@ pytest-cov
 faker
 flask-cors
 cryptography
+requests

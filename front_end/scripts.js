@@ -303,7 +303,7 @@ function displayPlaceDetails(place) {
     </ul >
     <h3>Reviews:</h3>
     <div>
-    ${(place.reviews || []).map(r => `<p>$(r.comment} - ${r.user?.name || 'Anonymous'}</p>`).join('')}
+    ${(place.reviews || []).map(r => `<p>${r.comment} - ${r.user?.name || 'Anonymous'}</p>`).join('')}
     </div>
 `;
 }

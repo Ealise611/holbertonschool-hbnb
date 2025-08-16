@@ -518,115 +518,140 @@ h1 {
     color: #666;
 }
 
-/* Add review form styling */
-.add-review {
+#review-form {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-}
-
-.form {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    margin: 30px auto;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     padding: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e1e8ed;
 }
 
-.form h2 {
+#review-form h2 {
     text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-    font-size: 2em;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    font-size: 24px;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
+#review-form label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #333;
+    color: #2c3e50;
+    font-size: 14px;
 }
 
-.form-group textarea,
-.form-group select {
+#review-form textarea,
+#review-form select {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    font-family: inherit;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
     box-sizing: border-box;
 }
 
-.form-group textarea {
+#review-form textarea {
     resize: vertical;
     min-height: 120px;
 }
 
-.form-group textarea:focus,
-.form-group select:focus {
+#review-form textarea:focus,
+#review-form select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 30px;
-}
-
-.submit-btn,
-.cancel-btn {
-    padding: 12px 30px;
+#review-form button {
+    padding: 12px 25px;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.submit-btn {
-    background-color: #28a745;
+    margin-right: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.submit-btn:hover {
-    background-color: #218838;
+#review-form button:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
-.cancel-btn {
-    background-color: #6c757d;
+#review-form button[onclick] {
+    background: #6c757d;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+#review-form button[onclick]:hover {
+    background: #5a6268;
+}
+
+/* Place info for review context */
+.place-info-review {
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e1e8ed;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.place-info-review h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 20px;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.place-info-review p {
+    margin: 8px 0;
+    color: #5a6c7d;
+    font-size: 14px;
+}
+
+.place-info-review strong {
+    color: #2c3e50;
+}
+
+/* Success message styling */
+.success-message {
+    background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
     color: white;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
+    font-weight: 500;
+    font-size: 14px;
 }
 
-.cancel-btn:hover {
-    background-color: #5a6268;
-}
-
-/* Responsive design */
+/* Mobile responsiveness for review form */
 @media (max-width: 768px) {
-    .add-review {
-        margin: 10px;
-        padding: 10px;
-    }
-    
-    .form {
+    #review-form {
+        margin: 20px 10px;
         padding: 20px;
     }
     
-    .form-actions {
-        flex-direction: column;
+    .place-info-review {
+        margin: 20px 10px;
+        padding: 15px;
     }
     
-    .submit-btn,
-    .cancel-btn {
+    #review-form button {
         width: 100%;
+        margin: 5px 0;
     }
 }

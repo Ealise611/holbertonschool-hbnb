@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('🚀 Page loaded:', window.location.pathname);
+
+    // LOGIN FORM (login.html)
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
@@ -8,9 +11,30 @@ document.addEventListener('DOMContentLoaded', () => {
             await loginUser(email, password);
         });
     }
-    initializePriceFilter();
-    checkAuthentication();
+
+    // INDEX PAGE (index.html)
+    if (document.getElementById('places-list')) {
+        initializePriceFilter();
+        checkAuthentication();
+    }
+
+    // PLACE DETAILS PAGE (place.html)
+    if (document.getElementById('place-details')) {
+        const token = getCookie('token');
+        const placeID = getPlaceIdFromURL();
+
+        if (!placeID) {
+            alert('No place id provided');
+            return;
+        }
+
+        const ok = await fetchPlaceDetails(placeID);
+        if (!ok) alert('Failed to load place details');
+
+        addReviewButtonToPlacePage();
+    }
 });
+
 
 // TASK 1 - login form
 async function loginUser(email, password) {
@@ -51,6 +75,7 @@ function getCookie(name) {
 }
 
 function checkAuthentication() {
+    if (!document.getElementById('places-list')) return;
     const token = getCookie('token');
     const loginLink = document.getElementById('login-link');
 
@@ -173,7 +198,6 @@ function initializePriceFilter() {
         return;
     }
 
-    // Only set up the event listener once
     filterSelect.addEventListener('change', (event) => {
         const selectedPrice = event.target.value;
         console.log('Filter changed to:', selectedPrice);
@@ -181,7 +205,6 @@ function initializePriceFilter() {
     });
 }
 
-// FIXED: Improved filter function
 function filterPlacesByPrice(maxPrice) {
     console.log('Filtering by max price:', maxPrice);
 
@@ -243,31 +266,10 @@ function showError(message) {
 }
 
 // Task 3 - Place details
-document.addEventListener('DOMContentLoaded', async () => {
-    if (!document.getElementById('place-details')) {
-        return;
-    }
-    //use getCookie to get the token
-    const token = getCookie('token');
-    // get the place id from the URL
-    const placeID = getPlaceIdFromURL();
-    if (!placeID) {
-        alert('No place id provided');
-        return;
-    }
-    //only show add review button if user is logged in
-    const addReviewSection = document.getElementById('add-review');
-    if (addReviewSection) {
-        addReviewSection.style.display = token ? 'block' : 'none';
-        // get details if failed then alert
-        const ok = await fetchPlaceDetails(placeID);
-        if (!ok) alert('Failed to load place details');
-    }
-});
 
 function getPlaceIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('id'); //if id is not found, it will return null
+    return urlParams.get('id');
 }
 
 async function fetchPlaceDetails(placeID) {
@@ -310,144 +312,153 @@ function displayPlaceDetails(place) {
 
 // Task 4
 
-const token = getCookie('token');
+if (window.location.pathname.includes('add_review.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('📝 Add review page detected');
 
-function checkAuthentication() {
-    const token = getCookie('token');
-    if (!token) {
-        window.location.href = 'index.html';
-        return null;
-    }
-    return token;
-}
-
-function getPlaceIdFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('place_id');
-}
-
-async function submitReview(token, placeId, reviewText, rating) {
-    try {
-        const response = await fetch('/api/v1/reviews/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                text: reviewText,
-                rating: parseInt(rating),
-                place_id: placeId
-            })
-        });
-
-        return response;
-    } catch (error) {
-        console.error('Error submitting review:', error);
-        throw error;
-    }
-}
-
-function handleResponse(response, reviewForm) {
-    if (response.ok) {
-        alert('Review submitted successfully!');
-        reviewForm.reset();
-    } else {
-        alert('Failed to submit review. Please try again.');
-    }
-}
-
-async function displayPlaceInfo(token, placeId) {
-    try {
-        const response = await fetch(`/api/v1/places/${placeId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            const place = await response.json();
-
-            const main = document.querySelector('main');
-            const existingPlaceInfo = document.querySelector('.place-info');
-
-            if (!existingPlaceInfo) {
-                const placeInfoDiv = document.createElement('div');
-                placeInfoDiv.className = 'place-info';
-                placeInfoDiv.innerHTML = `
-                    <h3>Reviewing: ${place.title}</h3>
-                    <p><strong>Host:</strong> ${place.owner.first_name} ${place.owner.last_name}</p>
-                    <p><strong>Price:</strong> $${place.price} per night</p>
-                    <p><strong>Description:</strong> ${place.description}</p>
-                `;
-
-                // Insert before the form
-                const form = document.querySelector('#review-form');
-                main.insertBefore(placeInfoDiv, form);
-            }
+        const token = getCookie('token');
+        if (!token) {
+            alert('You must be logged in to add a review.');
+            window.location.href = 'index.html';
+            return;
         }
-    } catch (error) {
-        console.error('Error fetching place details:', error);
-    }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const placeId = urlParams.get('place_id');
+
+        if (!placeId) {
+            alert('No place_id in URL. Expected: add_review.html?place_id=SOME_ID');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        console.log('✅ Place ID found:', placeId);
+
+        // Setup review form
+        const reviewForm = document.getElementById('review-form');
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const reviewText = document.getElementById('review').value.trim();
+                const rating = document.getElementById('rating').value;
+
+                if (!reviewText || !rating) {
+                    alert('Please fill in both review text and rating.');
+                    return;
+                }
+
+                try {
+                    console.log('📤 Submitting review...');
+
+                    const response = await fetch('http://localhost:5000/api/v1/reviews/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            text: reviewText,
+                            rating: parseInt(rating),
+                            place_id: placeId
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert('Review submitted successfully!');
+                        reviewForm.reset();
+                        window.location.href = `place.html?id=${placeId}`;
+                    } else {
+                        const errorText = await response.text();
+                        console.log('Error:', errorText);
+                        alert(`Failed to submit review: ${errorText}`);
+                    }
+                } catch (error) {
+                    console.log('Network error:', error);
+                    alert('Network error. Please try again.');
+                }
+            });
+        }
+
+        // Load place info
+        fetch(`http://localhost:5000/api/v1/places/${placeId}`)
+            .then(response => response.json())
+            .then(place => {
+                const form = document.querySelector('#review-form');
+                if (form && place) {
+                    const infoDiv = document.createElement('div');
+                    infoDiv.innerHTML = `
+                        <div style="background: #f0f8ff; padding: 15px; margin: 15px 0; border-radius: 10px; border: 1px solid #ccc;">
+                            <h3>Reviewing: ${place.title}</h3>
+                            <p>Host: ${place.owner ? place.owner.first_name + ' ' + place.owner.last_name : 'Unknown'}</p>
+                            <p>Price: $${place.price}/night</p>
+                        </div>
+                    `;
+                    form.parentNode.insertBefore(infoDiv, form);
+                }
+            })
+            .catch(error => console.log('Could not load place info:', error));
+    });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const token = checkAuthentication();
+function addReviewButtonToPlacePage() {
+    if (!window.location.pathname.includes('place.html')) return;
 
-    const placeId = getPlaceIdFromURL();
+    const token = getCookie('token');
+    if (!token) return;
 
-    if (!placeId) {
-        alert('Invalid place ID. Redirecting to home page.');
-        window.location.href = 'index.html';
+    const urlParams = new URLSearchParams(window.location.search);
+    const placeId = urlParams.get('id');
+
+    if (!placeId) return;
+
+    const placeDetailsSection = document.getElementById('place-details');
+    if (!placeDetailsSection) return;
+
+    // CHECK: Prevent duplicate buttons
+    if (document.getElementById('review-button-container')) {
+        console.log('⚠️ Review button already exists, skipping...');
         return;
     }
 
-    displayPlaceInfo(token, placeId);
+    // Create the button
+    const reviewButton = document.createElement('div');
+    reviewButton.id = 'review-button-container';
+    reviewButton.innerHTML = `
+        <div style="text-align: center; margin: 30px 0;">
+            <button 
+                onclick="goToAddReview('${placeId}')" 
+                style="
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    border-radius: 25px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                    transition: all 0.3s ease;
+                "
+                onmouseover="this.style.background='linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)'; this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.style.transform='translateY(0px)'"
+            >
+                Write a Review
+            </button>
+        </div>
+    `;
 
-    const reviewForm = document.getElementById('review-form');
+    placeDetailsSection.appendChild(reviewButton);
+    console.log('✅ Review button added to place page');
+}
 
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const reviewText = document.getElementById('review').value.trim();
-            const rating = document.getElementById('rating').value;
-
-            if (!reviewText) {
-                alert('Please enter a review text.');
-                return;
-            }
-
-            if (!rating) {
-                alert('Please select a rating.');
-                return;
-            }
-
-            try {
-                const response = await submitReview(token, placeId, reviewText, rating);
-                handleResponse(response, reviewForm);
-
-                if (response.ok) {
-                    setTimeout(() => {
-                        window.location.href = `place.html?place_id=${placeId}`;
-                    }, 2000);
-                }
-            } catch (error) {
-                alert('An error occurred while submitting your review. Please try again.');
-            }
-        });
+function goToAddReview(placeId) {
+    const token = getCookie('token');
+    if (!token) {
+        alert('Please log in to write a review.');
+        window.location.href = 'login.html';
+        return;
     }
 
-    const loginLink = document.getElementById('login-link');
-    if (loginLink && token) {
-        loginLink.textContent = 'Logout';
-        loginLink.href = '#';
-        loginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Clear the token cookie
-            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            window.location.href = 'index.html';
-        });
-    }
-});
+    window.location.href = `add_review.html?place_id=${placeId}`;
+}

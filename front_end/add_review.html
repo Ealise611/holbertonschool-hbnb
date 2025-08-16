@@ -19,42 +19,35 @@
         </div>
         <nav>
             <a href="index.html">Home</a>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+            <a href="login.html" id="login-link">Login</a>
         </nav>
     </header>
 
     <main>
         <!-- Place information will be dynamically inserted here -->
 
-        <div class="add-review">
-            <form id="review-form" class="form">
-                <h2>Add Your Review</h2>
+        <form id="review-form">
+            <h2>Add Your Review</h2>
 
-                <div class="form-group">
-                    <label for="review">Your Review:</label>
-                    <textarea id="review" name="review" rows="5" placeholder="Share your experience about this place..."
-                        required>
-                    </textarea>
-                </div>
+            <label for="review">Your Review:</label>
+            <textarea id="review" name="review" rows="5" placeholder="Share your experience about this place..."
+                required>
+            </textarea>
 
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <select id="rating" name="rating" required>
-                        <option value="">Select a rating</option>
-                        <option value="1">⭐ 1 Star - Poor</option>
-                        <option value="2">⭐⭐ 2 Stars - Fair</option>
-                        <option value="3">⭐⭐⭐ 3 Stars - Good</option>
-                        <option value="4">⭐⭐⭐⭐ 4 Stars - Very Good</option>
-                        <option value="5">⭐⭐⭐⭐⭐ 5 Stars - Excellent</option>
-                    </select>
-                </div>
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating" required>
+                <option value="">Select a rating</option>
+                <option value="1">⭐ 1 Star - Poor</option>
+                <option value="2">⭐⭐ 2 Stars - Fair</option>
+                <option value="3">⭐⭐⭐ 3 Stars - Good</option>
+                <option value="4">⭐⭐⭐⭐ 4 Stars - Very Good</option>
+                <option value="5">⭐⭐⭐⭐⭐ 5 Stars - Excellent</option>
+            </select>
 
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn">Submit Review</button>
-                    <button type="button" class="cancel-btn" onclick="window.history.back()">Cancel</button>
-                </div>
-            </form>
-        </div>
+            <button type="submit">Submit Review</button>
+            <button type="button" onclick="window.history.back()"
+                style="background: #6c757d; margin-left: 10px;">Cancel</button>
+        </form>
     </main>
 
     <footer class="footer">

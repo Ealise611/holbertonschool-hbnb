@@ -307,3 +307,147 @@ function displayPlaceDetails(place) {
     </div>
 `;
 }
+
+// Task 4
+
+const token = getCookie('token');
+
+function checkAuthentication() {
+    const token = getCookie('token');
+    if (!token) {
+        window.location.href = 'index.html';
+        return null;
+    }
+    return token;
+}
+
+function getPlaceIdFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('place_id');
+}
+
+async function submitReview(token, placeId, reviewText, rating) {
+    try {
+        const response = await fetch('/api/v1/reviews/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                text: reviewText,
+                rating: parseInt(rating),
+                place_id: placeId
+            })
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error submitting review:', error);
+        throw error;
+    }
+}
+
+function handleResponse(response, reviewForm) {
+    if (response.ok) {
+        alert('Review submitted successfully!');
+        reviewForm.reset();
+    } else {
+        alert('Failed to submit review. Please try again.');
+    }
+}
+
+async function displayPlaceInfo(token, placeId) {
+    try {
+        const response = await fetch(`/api/v1/places/${placeId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            const place = await response.json();
+
+            const main = document.querySelector('main');
+            const existingPlaceInfo = document.querySelector('.place-info');
+
+            if (!existingPlaceInfo) {
+                const placeInfoDiv = document.createElement('div');
+                placeInfoDiv.className = 'place-info';
+                placeInfoDiv.innerHTML = `
+                    <h3>Reviewing: ${place.title}</h3>
+                    <p><strong>Host:</strong> ${place.owner.first_name} ${place.owner.last_name}</p>
+                    <p><strong>Price:</strong> $${place.price} per night</p>
+                    <p><strong>Description:</strong> ${place.description}</p>
+                `;
+
+                // Insert before the form
+                const form = document.querySelector('#review-form');
+                main.insertBefore(placeInfoDiv, form);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching place details:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const token = checkAuthentication();
+
+    const placeId = getPlaceIdFromURL();
+
+    if (!placeId) {
+        alert('Invalid place ID. Redirecting to home page.');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    displayPlaceInfo(token, placeId);
+
+    const reviewForm = document.getElementById('review-form');
+
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const reviewText = document.getElementById('review').value.trim();
+            const rating = document.getElementById('rating').value;
+
+            if (!reviewText) {
+                alert('Please enter a review text.');
+                return;
+            }
+
+            if (!rating) {
+                alert('Please select a rating.');
+                return;
+            }
+
+            try {
+                const response = await submitReview(token, placeId, reviewText, rating);
+                handleResponse(response, reviewForm);
+
+                if (response.ok) {
+                    setTimeout(() => {
+                        window.location.href = `place.html?place_id=${placeId}`;
+                    }, 2000);
+                }
+            } catch (error) {
+                alert('An error occurred while submitting your review. Please try again.');
+            }
+        });
+    }
+
+    const loginLink = document.getElementById('login-link');
+    if (loginLink && token) {
+        loginLink.textContent = 'Logout';
+        loginLink.href = '#';
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Clear the token cookie
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.href = 'index.html';
+        });
+    }
+});

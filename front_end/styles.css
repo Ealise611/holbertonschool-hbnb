@@ -1,3 +1,4 @@
+
 /* Reset and Base Styles */
 * {
     box-sizing: border-box;
@@ -11,21 +12,17 @@ body {
     color: #2c3e50;
     line-height: 1.4;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
-/*HEADER STYLES*/
-
+/* HEADER*/
 header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     position: relative;
     overflow: hidden;
+    display: table;
+    width: 100%;
 }
 
 header::before {
@@ -40,11 +37,15 @@ header::before {
 }
 
 .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    display: table-cell;
+    vertical-align: middle;
     z-index: 2;
     position: relative;
+}
+
+.logo-container a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .logo {
@@ -55,6 +56,8 @@ header::before {
     background: rgba(255, 255, 255, 0.1);
     padding: 5px;
     backdrop-filter: blur(10px);
+    vertical-align: middle;
+    margin-right: 15px;
 }
 
 .brand-text {
@@ -63,9 +66,14 @@ header::before {
     font-weight: bold;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     letter-spacing: 1px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 nav {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
     z-index: 2;
     position: relative;
 }
@@ -75,11 +83,6 @@ nav a {
     text-decoration: none;
     font-size: 16px;
     font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -87,19 +90,14 @@ nav a {
 }
 
 nav a:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    text-decoration: underline;
 }
 
-/*MAIN CONTENT*/
-
+/* MAIN CONTENT */
 main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 20px;
-    flex: 1;
 }
 
 h1 {
@@ -111,8 +109,7 @@ h1 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/*FILTER SECTION*/
-
+/* FILTER SECTION */
 #filter {
     text-align: center;
     margin-bottom: 40px;
@@ -121,6 +118,9 @@ h1 {
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
+}
+
+.filter-container {
 }
 
 #filter label {
@@ -146,31 +146,27 @@ h1 {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/*PLACES LAYOUT*/
-
+/* PLACES LAYOUT */
 #places-list {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
+/* SIMPLIFIED ROW*/
 .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
-    flex-wrap: wrap;
+    margin: 20px 0;
 }
 
+/* COLUMN */
 .column {
-    flex: 1;
-    min-width: 280px;
-    max-width: 350px;
-    display: flex;
+    width: 100%;
 }
 
-/*PLACE CARDS*/
-
+/* PLACE CARDS*/
 .place-card {
     /* REQUIRED FIXED PARAMETERS */
     margin: 20px;
@@ -181,12 +177,10 @@ h1 {
     background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     text-align: center;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    width: calc(100% - 40px);
     position: relative;
     overflow: hidden;
+    min-height: 200px;
 }
 
 .place-card::before {
@@ -219,8 +213,7 @@ h1 {
     padding-top: 10px;
 }
 
-/*BUTTONS*/
-
+/* BUTTONS*/
 .details-button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -241,8 +234,7 @@ h1 {
     background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
-/*LOGIN FORM */
-
+/* LOGIN FORM */
 #login-form {
     max-width: 400px;
     margin: 50px auto;
@@ -303,8 +295,7 @@ h1 {
     background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
-/*REVIEW CARDS*/
-
+/* REVIEW CARDS*/
 .review-card {
     /* REQUIRED FIXED PARAMETERS */
     margin: 20px;
@@ -328,22 +319,85 @@ h1 {
     color: #2c3e50;
 }
 
-.star-rating {
-    font-size: 18px;
-    color: #f39c12;
-    margin: 5px 0;
+/* PLACE DETAILS AND FORMS */
+.place-details {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
 }
 
-.star {
-    color: #ddd;
+.place-info p {
+    margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
-.star.selected {
-    color: #f39c12;
+.place-info b {
+    color: #2c3e50;
+    font-weight: 600;
 }
 
-/*MESSAGES*/
+#reviews {
+    margin-bottom: 30px;
+}
 
+.add-review {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form {
+    max-width: 400px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.form label, #review-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.form input, .form textarea, .form select,
+#review-form input, #review-form textarea, #review-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #f8f9fa;
+}
+
+.form input:focus, .form textarea:focus, .form select:focus,
+#review-form input:focus, #review-form textarea:focus, #review-form select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+}
+
+.form button, #review-form button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* MESSAGES*/
 .error-message {
     background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
     color: white;
@@ -368,8 +422,7 @@ h1 {
     font-weight: 500;
 }
 
-/*FOOTER*/
-
+/* FOOTER*/
 .footer {
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     color: white;
@@ -385,18 +438,25 @@ h1 {
     opacity: 0.9;
 }
 
-/*RESPONSIVE*/
-
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    .row {
-        flex-direction: column;
-        align-items: center;
+    header {
+        display: block;
+        text-align: center;
     }
     
-    .column {
-        flex: none;
-        max-width: 400px;
-        width: 100%;
+    .logo-container, nav {
+        display: block;
+        text-align: center;
+    }
+    
+    nav {
+        margin-top: 15px;
+    }
+    
+    .row {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
     
     main {
@@ -405,10 +465,6 @@ h1 {
     
     h1 {
         font-size: 28px;
-    }
-    
-    header {
-        padding: 10px 15px;
     }
     
     #places-list {
@@ -430,14 +486,147 @@ h1 {
         font-size: 24px;
     }
     
-    #login-form {
+    #login-form, .form {
         margin: 20px 10px;
         padding: 20px;
     }
 }
 
+/* special styles */
 #places-details .place {
     background-color: #667eea;
     border-radius: 7px;
     padding: 3%;
+}
+
+.place-info {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.place-info h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.place-info p {
+    margin: 10px 0;
+    color: #666;
+}
+
+/* Add review form styling */
+.add-review {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.form {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.submit-btn,
+.cancel-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .add-review {
+        margin: 10px;
+        padding: 10px;
+    }
+    
+    .form {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .submit-btn,
+    .cancel-btn {
+        width: 100%;
+    }
 }

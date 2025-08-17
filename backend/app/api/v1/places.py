@@ -86,10 +86,8 @@ class PlaceList(Resource):
         ], 200
 
 
-@api.route("/<place_id>")  # Handles /api/v1/places/[place_id]
+@api.route("/<place_id>")
 class PlaceResource(Resource):
-    @api.response(200, "Place details retrieved successfully")
-    @api.response(404, "Place not found")
     def get(self, place_id):
         """Get place details by ID - PUBLIC ACCESS"""
         place = facade.get_place(place_id)
@@ -120,7 +118,12 @@ class PlaceResource(Resource):
                     "id": review.id,
                     "text": review.text,
                     "rating": review.rating,
-                    "user_id": review.user.id,
+                    "user": {
+                        "id": review.user.id,
+                        "first_name": review.user.first_name,
+                        "last_name": review.user.last_name,
+                        "email": review.user.email,
+                    },
                 }
                 for review in reviews
             ],

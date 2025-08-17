@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const token = getCookie('token');
 
-        // Enhanced token validation
         if (!isTokenValid(token)) {
             showError('You must be logged in to add a review. Please log in again.');
             setTimeout(() => {
@@ -60,9 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        console.log('✅ Place ID found:', placeId);
+        console.log('Place ID found:', placeId);
 
-        // Setup review form with enhanced error handling
         const reviewForm = document.getElementById('review-form');
         if (reviewForm) {
             reviewForm.addEventListener('submit', async (event) => {
@@ -76,7 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                // Disable form during submission
                 const submitButton = event.target.querySelector('button[type="submit"]');
                 const originalText = submitButton.textContent;
                 submitButton.disabled = true;
@@ -85,7 +82,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     console.log('📤 Submitting review...');
 
-                    // Use enhanced authenticated request
                     const response = await makeAuthenticatedRequest('http://localhost:5000/api/v1/reviews/', {
                         method: 'POST',
                         body: JSON.stringify({
@@ -96,7 +92,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
 
                     if (!response) {
-                        // Error already handled by makeAuthenticatedRequest
                         return;
                     }
 
@@ -141,7 +136,6 @@ async function loginUser(email, password) {
             const data = await response.json();
             document.cookie = `token=${data.access_token}; path=/`;
 
-            // Re-check authentication to update UI immediately
             checkAuthentication();
 
             showSuccess('Login successful! Redirecting...');

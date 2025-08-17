@@ -114,6 +114,13 @@ class HBnBSetup:
                 "email": "charlie@example.com",
                 "password": "charlie123",
             },
+            {
+                "name": "diana",
+                "first_name": "Diana",
+                "last_name": "Smith",
+                "email": "diana@example.com",
+                "password": "diana123",
+            },
         ]
 
         for user in users:
@@ -157,6 +164,8 @@ class HBnBSetup:
             {"name": "Parking", "description": "Free on-site parking"},
             {"name": "Air Conditioning", "description": "Central air conditioning"},
             {"name": "Kitchen", "description": "Fully equipped kitchen"},
+            {"name": "Pet Friendly", "description": "Pets welcome"},
+            {"name": "Gym", "description": "Fitness center access"},
         ]
 
         for amenity in amenities:
@@ -174,9 +183,102 @@ class HBnBSetup:
         return True
 
     def create_places(self):
-        """Create places for each user"""
+        """Create places for each user with varied pricing for filter testing"""
         places = [
-            # Alice's places
+            # BUDGET PLACES ($5-$10) - Perfect for testing "Up to $10" filter
+            {
+                "owner": "diana",
+                "title": "Backpacker Hostel Bed",
+                "description": "Shared dormitory room in clean, safe hostel near train station",
+                "price": 8,
+                "latitude": 40.7580,
+                "longitude": -73.9855,
+                "amenities": ["wi_fi_id"],
+            },
+            {
+                "owner": "diana",
+                "title": "Budget Camping Spot",
+                "description": "Basic tent camping with shared facilities, great for nature lovers",
+                "price": 5,
+                "latitude": 41.2500,
+                "longitude": -77.8000,
+                "amenities": ["parking_id"],
+            },
+            {
+                "owner": "charlie",
+                "title": "Student Room Share",
+                "description": "Shared room near university campus, perfect for students",
+                "price": 9,
+                "latitude": 40.7400,
+                "longitude": -73.9900,
+                "amenities": ["wi_fi_id"],
+            },
+            # LOW-COST PLACES ($15-$50) - Perfect for testing "Up to $50" filter
+            {
+                "owner": "diana",
+                "title": "Cozy Studio Apartment",
+                "description": "Small but comfortable studio in quiet neighborhood",
+                "price": 25,
+                "latitude": 40.7200,
+                "longitude": -74.0100,
+                "amenities": ["wi_fi_id", "kitchen_id"],
+            },
+            {
+                "owner": "alice",
+                "title": "Guest Room in Family Home",
+                "description": "Private room in friendly family home with breakfast included",
+                "price": 35,
+                "latitude": 40.7300,
+                "longitude": -73.9800,
+                "amenities": ["wi_fi_id", "parking_id"],
+            },
+            {
+                "owner": "bob",
+                "title": "Countryside Cottage",
+                "description": "Rustic cottage surrounded by nature, perfect for weekend getaway",
+                "price": 45,
+                "latitude": 41.1000,
+                "longitude": -77.5000,
+                "amenities": ["parking_id", "pet_friendly_id"],
+            },
+            {
+                "owner": "charlie",
+                "title": "Urban Loft Share",
+                "description": "Shared loft space in trendy district, great for young professionals",
+                "price": 40,
+                "latitude": 40.7450,
+                "longitude": -73.9950,
+                "amenities": ["wi_fi_id", "gym_id"],
+            },
+            # MID-RANGE PLACES ($60-$100) - Perfect for testing "Up to $100" filter
+            {
+                "owner": "alice",
+                "title": "Boutique Hotel Room",
+                "description": "Stylish room in boutique hotel with personalized service",
+                "price": 85,
+                "latitude": 40.7600,
+                "longitude": -73.9700,
+                "amenities": ["wi_fi_id", "air_conditioning_id", "gym_id"],
+            },
+            {
+                "owner": "bob",
+                "title": "Waterfront Cabin",
+                "description": "Charming cabin with lake views and private dock access",
+                "price": 75,
+                "latitude": 40.8000,
+                "longitude": -74.2000,
+                "amenities": ["wi_fi_id", "parking_id", "kitchen_id"],
+            },
+            {
+                "owner": "diana",
+                "title": "Modern Apartment",
+                "description": "Contemporary apartment with city views and modern amenities",
+                "price": 90,
+                "latitude": 40.7550,
+                "longitude": -73.9850,
+                "amenities": ["wi_fi_id", "air_conditioning_id", "parking_id"],
+            },
+            # ORIGINAL HIGHER-PRICED PLACES (for testing "All" filter)
             {
                 "owner": "alice",
                 "title": "Modern Downtown Loft",
@@ -195,7 +297,6 @@ class HBnBSetup:
                 "longitude": -73.9934,
                 "amenities": ["wi_fi_id", "parking_id"],
             },
-            # Bob's places
             {
                 "owner": "bob",
                 "title": "Luxury Villa with Pool",
@@ -228,7 +329,6 @@ class HBnBSetup:
                 "longitude": -77.1945,
                 "amenities": ["wi_fi_id", "parking_id", "kitchen_id"],
             },
-            # Charlie's places
             {
                 "owner": "charlie",
                 "title": "Central City Apartment",
@@ -278,7 +378,9 @@ class HBnBSetup:
 
                 place_key = f"{owner}_place_{place_counter[owner]}"
                 self.ids[place_key] = result["id"]
-                self.log(f"Created {place['title']} for {owner.title()}")
+                self.log(
+                    f"Created {place['title']} for {owner.title()} (${place['price']}/night)"
+                )
             else:
                 self.warn(f"Could not create {place['title']}")
 
@@ -287,68 +389,91 @@ class HBnBSetup:
     def create_reviews(self):
         """Create cross-reviews between users"""
         reviews = [
-            # Alice reviews Bob's places
+            # Reviews for budget places
+            {
+                "reviewer": "alice",
+                "place_key": "diana_place_1",
+                "text": "Great value for money! Clean hostel with friendly staff.",
+                "rating": 4,
+            },
+            {
+                "reviewer": "bob",
+                "place_key": "diana_place_2",
+                "text": "Perfect for camping enthusiasts. Basic but clean facilities.",
+                "rating": 3,
+            },
+            {
+                "reviewer": "diana",
+                "place_key": "charlie_place_1",
+                "text": "Good for students on a budget. Close to campus and public transport.",
+                "rating": 4,
+            },
+            # Reviews for mid-range places
+            {
+                "reviewer": "charlie",
+                "place_key": "diana_place_4",
+                "text": "Lovely little studio! Perfect for a solo traveler.",
+                "rating": 4,
+            },
+            {
+                "reviewer": "bob",
+                "place_key": "alice_place_1",
+                "text": "Wonderful family atmosphere and delicious breakfast!",
+                "rating": 5,
+            },
             {
                 "reviewer": "alice",
                 "place_key": "bob_place_1",
+                "text": "Beautiful countryside location. Very peaceful and relaxing.",
+                "rating": 4,
+            },
+            # Original reviews for higher-priced places
+            {
+                "reviewer": "alice",
+                "place_key": "bob_place_4",
                 "text": "Absolutely stunning villa! The pool was amazing and everything was spotless. Perfect for a luxury getaway.",
                 "rating": 5,
             },
             {
                 "reviewer": "alice",
-                "place_key": "bob_place_2",
+                "place_key": "bob_place_5",
                 "text": "Amazing beach house! Direct beach access was perfect and the location couldn't be better.",
                 "rating": 5,
             },
             {
                 "reviewer": "alice",
-                "place_key": "bob_place_3",
+                "place_key": "bob_place_6",
                 "text": "Perfect mountain retreat! So peaceful and the hiking trails nearby are fantastic.",
                 "rating": 4,
             },
-            # Bob reviews Alice's places
             {
                 "reviewer": "bob",
-                "place_key": "alice_place_1",
+                "place_key": "alice_place_2",
                 "text": "Modern and stylish loft with incredible city views. Loved the downtown location!",
                 "rating": 5,
             },
             {
                 "reviewer": "bob",
-                "place_key": "alice_place_2",
+                "place_key": "alice_place_3",
                 "text": "Perfect studio for creative work! Tons of natural light and very inspiring atmosphere.",
                 "rating": 4,
             },
-            # Charlie reviews everyone
             {
                 "reviewer": "charlie",
-                "place_key": "alice_place_1",
+                "place_key": "alice_place_2",
                 "text": "Great downtown location and very stylish. Perfect for exploring the city.",
                 "rating": 4,
             },
             {
                 "reviewer": "charlie",
-                "place_key": "bob_place_1",
+                "place_key": "bob_place_4",
                 "text": "Incredible luxury villa! The pool and garden are amazing. Highly recommend.",
                 "rating": 5,
             },
             {
-                "reviewer": "charlie",
-                "place_key": "bob_place_2",
-                "text": "Amazing beach access and great for families. Kids loved playing in the sand!",
-                "rating": 4,
-            },
-            # Alice and Bob review Charlie's places
-            {
-                "reviewer": "alice",
-                "place_key": "charlie_place_1",
+                "reviewer": "diana",
+                "place_key": "charlie_place_3",
                 "text": "Great location and very convenient for getting around the city. Clean and comfortable.",
-                "rating": 4,
-            },
-            {
-                "reviewer": "bob",
-                "place_key": "charlie_place_2",
-                "text": "Such a peaceful and charming cottage. The garden is beautiful and perfect for relaxing.",
                 "rating": 4,
             },
         ]
@@ -373,7 +498,7 @@ class HBnBSetup:
             if result and "id" in result:
                 review_count += 1
                 self.log(
-                    f"{review['reviewer'].title()} reviewed a place ({review_count}/10)"
+                    f"{review['reviewer'].title()} reviewed a place ({review_count}/{len(reviews)})"
                 )
             else:
                 self.warn(f"Could not create review from {review['reviewer']}")
@@ -399,6 +524,20 @@ class HBnBSetup:
         if places:
             self.log(f"Found {len(places)} places")
 
+            # Price distribution for filter testing
+            if places:
+                prices = [p.get("price", 0) for p in places]
+                budget_count = len([p for p in prices if p <= 10])
+                low_cost_count = len([p for p in prices if 10 < p <= 50])
+                mid_range_count = len([p for p in prices if 50 < p <= 100])
+                high_end_count = len([p for p in prices if p > 100])
+
+                self.log(f"Price distribution for filter testing:")
+                self.log(f"  • Budget (≤$10): {budget_count} places")
+                self.log(f"  • Low-cost ($11-$50): {low_cost_count} places")
+                self.log(f"  • Mid-range ($51-$100): {mid_range_count} places")
+                self.log(f"  • High-end (>$100): {high_end_count} places")
+
         # Check reviews
         reviews = self.get("/reviews/")
         if reviews:
@@ -422,27 +561,46 @@ class HBnBSetup:
         print("   • Alice Johnson: alice@example.com (password: alice123)")
         print("   • Bob Wilson: bob@example.com (password: bob123)")
         print("   • Charlie Brown: charlie@example.com (password: charlie123)")
+        print("   • Diana Smith: diana@example.com (password: diana123)")
 
-        print("\n🏠 PLACES CREATED:")
-        print("   Alice (2 places):")
-        print("     - Modern Downtown Loft ($180/night)")
-        print("     - Cozy Art Studio ($120/night)")
-        print("   Bob (3 places):")
+        print("\n🏠 PLACES CREATED WITH VARIED PRICING:")
+        print("   💰 BUDGET ($5-$10):")
+        print("     - Backpacker Hostel Bed ($8/night)")
+        print("     - Budget Camping Spot ($5/night)")
+        print("     - Student Room Share ($9/night)")
+        print("   💵 LOW-COST ($25-$50):")
+        print("     - Cozy Studio Apartment ($25/night)")
+        print("     - Guest Room in Family Home ($35/night)")
+        print("     - Countryside Cottage ($45/night)")
+        print("     - Urban Loft Share ($40/night)")
+        print("   💳 MID-RANGE ($75-$100):")
+        print("     - Boutique Hotel Room ($85/night)")
+        print("     - Waterfront Cabin ($75/night)")
+        print("     - Modern Apartment ($90/night)")
+        print("   💎 PREMIUM ($110-$350):")
         print("     - Luxury Villa with Pool ($350/night)")
         print("     - Oceanfront Beach House ($280/night)")
+        print("     - Modern Downtown Loft ($180/night)")
         print("     - Mountain Cabin Retreat ($150/night)")
-        print("   Charlie (2 places):")
         print("     - Central City Apartment ($140/night)")
+        print("     - Cozy Art Studio ($120/night)")
         print("     - Charming Garden Cottage ($110/night)")
 
         print("\n🏷️ AMENITIES AVAILABLE:")
         print("   • Wi-Fi, Swimming Pool, Parking")
         print("   • Air Conditioning, Kitchen")
+        print("   • Pet Friendly, Gym")
+
+        print("\n🔍 FILTER TESTING:")
+        print("   • 'Up to $10': Shows 3 budget places")
+        print("   • 'Up to $50': Shows 7 budget + low-cost places")
+        print("   • 'Up to $100': Shows 10 budget + low-cost + mid-range places")
+        print("   • 'All': Shows all 17 places")
 
         print("\n⭐ REVIEWS CREATED:")
-        print("   • 10+ cross-reviews between users")
+        print("   • 15+ cross-reviews between users")
         print("   • No self-reviews (proper business logic)")
-        print("   • Average rating: 4.4+ stars")
+        print("   • Reviews across all price ranges")
 
         print("\n🔑 AUTHENTICATION:")
         print("   • All users have valid login credentials")
@@ -452,6 +610,7 @@ class HBnBSetup:
         print(f"\n✅ Your HBnB platform is ready for testing!")
         print(f"🌐 API Base URL: {BASE_URL}")
         print("📖 Test with Postman, cURL, or your frontend")
+        print("🎯 Perfect for testing price filtering functionality!")
         print("=" * 60 + "\n")
 
     def run(self):

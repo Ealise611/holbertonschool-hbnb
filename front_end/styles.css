@@ -1,5 +1,3 @@
-
-/* Reset and Base Styles */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,39 +6,23 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #2c3e50;
-    line-height: 1.4;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
     min-height: 100vh;
 }
 
-/* HEADER*/
 header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffb347 100%);
     padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    position: relative;
-    overflow: hidden;
+    color: white;
     display: table;
     width: 100%;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    pointer-events: none;
 }
 
 .logo-container {
     display: table-cell;
     vertical-align: middle;
-    z-index: 2;
-    position: relative;
 }
 
 .logo-container a {
@@ -51,11 +33,9 @@ header::before {
 .logo {
     height: 40px;
     width: auto;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
     padding: 5px;
-    backdrop-filter: blur(10px);
+    border-radius: 5px;
     vertical-align: middle;
     margin-right: 15px;
 }
@@ -64,8 +44,6 @@ header::before {
     color: white;
     font-size: 24px;
     font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    letter-spacing: 1px;
     display: inline-block;
     vertical-align: middle;
 }
@@ -74,26 +52,19 @@ nav {
     display: table-cell;
     vertical-align: middle;
     text-align: right;
-    z-index: 2;
-    position: relative;
 }
 
 nav a {
     color: white;
     text-decoration: none;
     font-size: 16px;
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    font-size: 14px;
+    font-weight: bold;
 }
 
 nav a:hover {
     text-decoration: underline;
 }
 
-/* MAIN CONTENT */
 main {
     max-width: 1200px;
     margin: 0 auto;
@@ -104,56 +75,46 @@ h1 {
     text-align: center;
     font-size: 36px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #333;
     margin-bottom: 30px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* FILTER SECTION */
 #filter {
     text-align: center;
     margin-bottom: 40px;
-    background: rgba(255, 255, 255, 0.9);
+    background-color: white;
     padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.filter-container {
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
 #filter label {
     font-size: 16px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #333;
     margin-right: 10px;
 }
 
 #price-filter {
     padding: 10px 15px;
-    border: 2px solid #e1e8ed;
-    border-radius: 25px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 14px;
     background-color: white;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 #price-filter:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff6b35;
 }
 
-/* PLACES LAYOUT */
 #places-list {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* SIMPLIFIED ROW*/
 .row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -161,50 +122,32 @@ h1 {
     margin: 20px 0;
 }
 
-/* COLUMN */
 .column {
     width: 100%;
 }
 
-/* PLACE CARDS*/
 .place-card {
-    /* REQUIRED FIXED PARAMETERS */
     margin: 20px;
     padding: 10px;
-    border: 1px solid #e1e8ed;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    background-color: white;
     text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     width: calc(100% - 40px);
-    position: relative;
-    overflow: hidden;
     min-height: 200px;
-}
-
-.place-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
 }
 
 .place-card h3 {
     font-size: 20px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #333;
     margin-bottom: 15px;
-    line-height: 1.2;
     margin-top: 10px;
 }
 
 .place-card p {
     font-size: 14px;
-    color: #5a6c7d;
+    color: #666;
     margin-bottom: 15px;
 }
 
@@ -213,43 +156,36 @@ h1 {
     padding-top: 10px;
 }
 
-/* BUTTONS*/
 .details-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #ff6b35;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 25px;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: bold;
     text-decoration: none;
     display: inline-block;
-    min-width: auto;
-    width: auto;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .details-button:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    background-color: #e55a2b;
 }
 
-/* LOGIN FORM */
 #login-form {
     max-width: 400px;
     margin: 50px auto;
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    background-color: white;
     padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border: 1px solid #e1e8ed;
-    backdrop-filter: blur(10px);
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
 #login-form h2 {
     text-align: center;
     margin-bottom: 25px;
-    color: #2c3e50;
+    color: #333;
     font-size: 24px;
 }
 
@@ -257,7 +193,7 @@ h1 {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #333;
     font-size: 14px;
 }
 
@@ -265,78 +201,78 @@ h1 {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 15px;
-    border: 2px solid #e1e8ed;
-    border-radius: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 14px;
-    background-color: #f8f9fa;
+    background-color: #f9f9f9;
 }
 
 #login-form input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #ff6b35;
     background-color: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 #login-form button {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #ff6b35;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 #login-form button:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    background-color: #e55a2b;
 }
 
-/* REVIEW CARDS*/
 .review-card {
-    /* REQUIRED FIXED PARAMETERS */
     margin: 20px;
     padding: 10px;
-    border: 1px solid #e1e8ed;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background-color: white;
 }
 
 .review-card p {
     margin-bottom: 8px;
     font-size: 14px;
-    line-height: 1.4;
-    color: #5a6c7d;
+    color: #666;
 }
 
 .review-card p:first-child {
     font-weight: bold;
-    color: #2c3e50;
+    color: #333;
 }
 
-/* PLACE DETAILS AND FORMS */
+.add-review-section {
+    text-align: center;
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
 .place-details {
-    background: white;
+    background-color: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    border: 1px solid #ddd;
     margin-bottom: 30px;
 }
 
 .place-info p {
     margin-bottom: 12px;
     font-size: 16px;
-    line-height: 1.6;
 }
 
-.place-info b {
-    color: #2c3e50;
-    font-weight: 600;
+.place-info strong {
+    color: #333;
+    font-weight: bold;
 }
 
 #reviews {
@@ -344,26 +280,26 @@ h1 {
 }
 
 .add-review {
-    background: white;
+    background-color: white;
     padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
 .form {
     max-width: 400px;
     margin: 40px auto;
-    background: white;
+    background-color: white;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
 .form label, #review-form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #333;
     font-size: 14px;
 }
 
@@ -372,23 +308,23 @@ h1 {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
-    border: 2px solid #e1e8ed;
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
-    background: #f8f9fa;
+    background-color: #f9f9f9;
 }
 
 .form input:focus, .form textarea:focus, .form select:focus,
 #review-form input:focus, #review-form textarea:focus, #review-form select:focus {
     outline: none;
-    border-color: #667eea;
-    background: white;
+    border-color: #ff6b35;
+    background-color: white;
 }
 
-.form button, #review-form button {
+.form button {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #ff6b35;
     color: white;
     border: none;
     border-radius: 5px;
@@ -397,48 +333,345 @@ h1 {
     font-weight: bold;
 }
 
-/* MESSAGES*/
+.form button:hover {
+    background-color: #e55a2b;
+}
+
 .error-message {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    color: white;
+    background-color: #f8d7da;
+    color: #721c24;
     padding: 12px 20px;
     margin: 10px 0;
-    border: none;
-    border-radius: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .success-message {
-    background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
-    color: white;
+    background-color: #d4edda;
+    color: #155724;
     padding: 12px 20px;
     margin: 10px 0;
-    border: none;
-    border-radius: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
-    font-weight: 500;
+    font-weight: bold;
 }
 
-/* FOOTER*/
 .footer {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background-color: #333;
     color: white;
     text-align: center;
     padding: 30px 20px;
     margin-top: 40px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .footer p {
     font-size: 14px;
     margin: 5px 0;
-    opacity: 0.9;
 }
 
-/* RESPONSIVE */
+.place-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.place-info h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.place-info p {
+    margin: 10px 0;
+    color: #666;
+}
+
+#review-form {
+    max-width: 600px;
+    margin: 30px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+#review-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 24px;
+}
+
+#review-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+#review-form .button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#review-form .button-container button {
+    flex: 1;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0;
+}
+
+#review-form .button-container button[type="submit"] {
+    background-color: #ff6b35;
+    color: white;
+}
+
+#review-form .button-container button[type="submit"]:hover {
+    background-color: #e55a2b;
+}
+
+#review-form .button-container button[onclick] {
+    background-color: #6c757d;
+    color: white;
+}
+
+#review-form .button-container button[onclick]:hover {
+    background-color: #545b62;
+}
+
+.place-info-context {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 25px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.place-info-context h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.place-info-context p {
+    margin: 8px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.place-info-context strong {
+    color: #333;
+}
+
+.place-info {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 25px;
+    margin: 20px 0;
+}
+
+.place-info h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.place-info h3 {
+    font-size: 18px;
+    margin: 20px 0 10px 0;
+    color: #333;
+}
+
+.place-info p {
+    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666;
+}
+
+.place-info strong {
+    color: #333;
+}
+
+.place-info ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.place-info li {
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.place-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+    background-color: #f0f0f0;
+}
+
+.place-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+    background-color: #f0f0f0;
+}
+
+.place-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.place-card {
+    margin: 20px;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    text-align: center;
+    width: calc(100% - 40px);
+    overflow: hidden;
+}
+
+.place-card h3, .place-card p, .place-card .button-container {
+    padding: 0 15px;
+}
+
+.place-card h3 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.place-card .button-container {
+    padding-bottom: 15px;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: white;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.popup-image {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+}
+
+.popup-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.popup-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.popup-close:hover {
+    color: #333;
+}
+
+.popup-header {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.popup-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.popup-body p {
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.popup-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.popup-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.popup-btn.primary {
+    background-color: #ff6b35;
+    color: white;
+}
+
+.popup-btn.primary:hover {
+    background-color: #e55a2b;
+}
+
+.popup-btn.secondary {
+    background-color: #f8f9fa;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.popup-btn.secondary:hover {
+    background-color: #e9ecef;
+}
+
+.popup-hidden {
+    display: none;
+}
+
 @media (max-width: 768px) {
     header {
         display: block;
@@ -475,6 +708,25 @@ h1 {
         margin: 20px 10px 30px 10px;
         padding: 15px;
     }
+    
+    #review-form {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    
+    .place-info-context {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+    
+    #review-form .button-container {
+        flex-direction: column;
+    }
+    
+    #review-form .button-container button {
+        width: 100%;
+        margin: 5px 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -491,168 +743,3 @@ h1 {
         padding: 20px;
     }
 }
-
-/* special styles */
-#places-details .place {
-    background-color: #667eea;
-    border-radius: 7px;
-    padding: 3%;
-}
-
-.place-info {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px 0;
-}
-
-.place-info h3 {
-    margin-top: 0;
-    color: #333;
-    font-size: 1.5em;
-}
-
-.place-info p {
-    margin: 10px 0;
-    color: #666;
-}
-
-#review-form {
-    max-width: 600px;
-    margin: 30px auto;
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border: 1px solid #e1e8ed;
-}
-
-#review-form h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #2c3e50;
-    font-size: 24px;
-}
-
-#review-form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #2c3e50;
-    font-size: 14px;
-}
-
-#review-form textarea,
-#review-form select {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    border: 2px solid #e1e8ed;
-    border-radius: 10px;
-    font-size: 14px;
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
-}
-
-#review-form textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-#review-form textarea:focus,
-#review-form select:focus {
-    outline: none;
-    border-color: #667eea;
-    background-color: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-#review-form button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-right: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-#review-form button:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-}
-
-#review-form button[onclick] {
-    background: #6c757d;
-    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
-}
-
-#review-form button[onclick]:hover {
-    background: #5a6268;
-}
-
-/* Place info for review context */
-.place-info-review {
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #e1e8ed;
-    border-radius: 15px;
-    padding: 25px;
-    margin: 20px auto;
-    max-width: 600px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.place-info-review h3 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 20px;
-    border-bottom: 2px solid #667eea;
-    padding-bottom: 10px;
-}
-
-.place-info-review p {
-    margin: 8px 0;
-    color: #5a6c7d;
-    font-size: 14px;
-}
-
-.place-info-review strong {
-    color: #2c3e50;
-}
-
-/* Success message styling */
-.success-message {
-    background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
-    color: white;
-    padding: 12px 20px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
-    font-weight: 500;
-    font-size: 14px;
-}
-
-/* Mobile responsiveness for review form */
-@media (max-width: 768px) {
-    #review-form {
-        margin: 20px 10px;
-        padding: 20px;
-    }
-    
-    .place-info-review {
-        margin: 20px 10px;
-        padding: 15px;
-    }
-    
-    #review-form button {
-        width: 100%;
-        margin: 5px 0;
-    }
-}
-

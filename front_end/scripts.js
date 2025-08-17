@@ -118,11 +118,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         loadPlaceInfoForReview(placeId);
     }
+    if (getCurrentPage() === 'index' && !sessionStorage.getItem('popupClosed')) {
+        showPopup();
+    }
 });
 
 
 // TASK 1 - login form
 async function loginUser(email, password) {
+    // Authenticates user with API and handles response
     try {
         const response = await fetch('http://localhost:5000/api/v1/auth/login', {
             method: 'POST',
@@ -153,6 +157,7 @@ async function loginUser(email, password) {
 // TASK 2 - index.html
 
 function getCookie(name) {
+    // Retrieves cookie value by name
     const cookies = document.cookie.split(';');
     let foundToken = null;
 
@@ -166,11 +171,13 @@ function getCookie(name) {
 }
 
 function clearExpiredToken() {
+    // Clears expired token from cookies
     document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     console.log('Expired token cleared');
 }
 
 function isTokenValid(token) {
+    // Validates JWT token format and expiration
     if (!token) return false;
 
     try {
@@ -195,6 +202,7 @@ function isTokenValid(token) {
 }
 
 function checkAuthentication() {
+    // Initializes authentication state and updates UI accordingly
     const token = getCookie('token');
     const loginLink = document.getElementById('login-link');
 
@@ -234,6 +242,7 @@ function checkAuthentication() {
 }
 
 async function makeAuthenticatedRequest(url, options = {}) {
+    // Makes authenticated HTTP request with automatic token handling
     const token = getCookie('token');
 
     if (!isTokenValid(token)) {
@@ -275,6 +284,7 @@ async function makeAuthenticatedRequest(url, options = {}) {
 }
 
 async function fetchPlaces(token = null) {
+    // Fetches places data from API and displays them
     if (typeof fetch === 'undefined') {
         return showError('Browser not supported.');
     }
@@ -327,6 +337,7 @@ async function fetchPlaces(token = null) {
 }
 
 function displayPlaces(places) {
+    // Displays places in the UI with proper formatting
     const placesContainer = document.getElementById('places-list');
     if (!placesContainer) {
         console.error('places-list container not found');
@@ -353,13 +364,18 @@ function displayPlaces(places) {
         placeCard.setAttribute('data-price', place.price || 0);
 
         placeCard.innerHTML = `
-      <h3>${place.title || 'Unknown place'}</h3>
-            <p>Price per night: $${place.price || 'N/A'}</p>
-            ${place.description ? `<p class="description">${place.description.substring(0, 100)}${place.description.length > 100 ? '...' : ''}</p>` : ''}
-            <div class="button-container">
-                <button class="details-button" onclick="viewPlaceDetails('${place.id}')">View Details</button>
-            </div>
-        `;
+    <div class="place-image">
+        <img src="images/placeholder-${Math.floor(Math.random() * 5) + 1}.jpg" 
+             alt="${place.title}" 
+             onerror="this.src='images/placeholder.jpg'">
+    </div>
+    <h3>${place.title || 'Unknown place'}</h3>
+    <p>Price per night: $${place.price || 'N/A'}</p>
+    ${place.description ? `<p class="description">${place.description.substring(0, 100)}${place.description.length > 100 ? '...' : ''}</p>` : ''}
+    <div class="button-container">
+        <button class="details-button" onclick="viewPlaceDetails('${place.id}')">View Details</button>
+    </div>
+`;
 
         column.appendChild(placeCard);
         row.appendChild(column);
@@ -374,6 +390,7 @@ function displayPlaces(places) {
 }
 
 function initializePriceFilter() {
+    // Initializes price filter functionality
     const filterSelect = document.getElementById('price-filter');
     if (!filterSelect) {
         return;
@@ -387,6 +404,7 @@ function initializePriceFilter() {
 }
 
 function filterPlacesByPrice(maxPrice) {
+    // Filters displayed places by maximum price
     console.log('Filtering by max price:', maxPrice);
 
     const placeCards = document.querySelectorAll('.place-card');
@@ -407,10 +425,12 @@ function filterPlacesByPrice(maxPrice) {
 }
 
 function viewPlaceDetails(placeId) {
+    // Navigates to place details page
     window.location.href = `place.html?id=${placeId}`;
 }
 
 function showError(message) {
+    // Displays error message to user
     // Remove existing error messages
     const existingErrors = document.querySelectorAll('.error-message');
     existingErrors.forEach(error => error.remove());
@@ -418,16 +438,15 @@ function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.style.cssText = `
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-        color: white;
-        padding: 12px 20px;
-        margin: 15px 0;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        font-weight: 500;
-        animation: slideIn 0.3s ease-out;
-    `;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px 20px;
+    margin: 15px 0;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+`;
     errorDiv.textContent = message;
 
     const main = document.querySelector('main');
@@ -448,11 +467,13 @@ function showError(message) {
 // Task 3 - Place details
 
 function getPlaceIdFromURL() {
+    // Extracts place ID from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('id');
 }
 
 async function fetchPlaceDetails(placeID) {
+    // Fetches and displays place details from API
     try {
         const res = await fetch(`http://localhost:5000/api/v1/places/${placeID}`, {
             method: 'GET',
@@ -471,7 +492,9 @@ async function fetchPlaceDetails(placeID) {
         return false;
     }
 }
+
 function displayPlaceDetails(place) {
+    // Displays place details in the UI
     const container = document.getElementById('place-details');
     if (!container) return;
 
@@ -506,10 +529,11 @@ function displayPlaceDetails(place) {
             place.reviews.map(review => `
                     <div class="review-card">
                         <p><strong>Rating:</strong> ${'⭐'.repeat(review.rating || 0)}</p>
-                        <p><strong>Comment:</strong> ${review.text || review.comment || 'No comment'}</p>
+                        <p><strong>Comment:</strong> ${review.text || 'No comment'}</p>
                         <p><strong>Reviewer:</strong> ${review.user ?
                     `${review.user.first_name} ${review.user.last_name}` :
-                    'Anonymous'}</p>
+                    'Anonymous'
+                }</p>
                     </div>
                 `).join('') :
             '<p>No reviews yet.</p>'
@@ -521,11 +545,12 @@ function displayPlaceDetails(place) {
 // Task 4
 
 function addReviewButtonToPlacePage() {
+    // Adds review button to place page if user is authenticated
     if (!window.location.pathname.includes('place.html')) return;
 
     const token = getCookie('token');
-    if (!token) {
-        console.log('No token found - user not logged in');
+    if (!isTokenValid(token)) {
+        console.log('No valid token found - user not logged in');
         return;
     }
 
@@ -543,32 +568,31 @@ function addReviewButtonToPlacePage() {
         return;
     }
 
+    // Check if button already exists to prevent duplicates
     if (document.getElementById('review-button-container')) {
+        console.log('Review button already exists');
         return;
     }
-
 
     // Create the button
     const reviewButtonContainer = document.createElement('div');
     reviewButtonContainer.id = 'review-button-container';
     reviewButtonContainer.innerHTML = `
-        <div class="add-review-section" style="text-align: center; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-            <button 
-                onclick="goToAddReview('${placeId}')" 
-                class="details-button"
-                style="margin-top: 15px; padding: 12px 25px; font-size: 16px;">
-                Write a Review
-            </button>
-        </div>
-    `;
+    <div class="add-review-section">
+        <button onclick="goToAddReview('${placeId}')" class="details-button">
+            Write a Review
+        </button>
+    </div>
+`;
 
     placeDetailsSection.appendChild(reviewButtonContainer);
-    console.log('Review button added to place page');
+    console.log('✅ Review button added to place page');
 }
 
 function goToAddReview(placeId) {
+    // Navigates to add review page
     const token = getCookie('token');
-    if (!token) {
+    if (!isTokenValid(token)) {
         alert('Please log in to write a review.');
         window.location.href = 'login.html';
         return;
@@ -578,6 +602,7 @@ function goToAddReview(placeId) {
 }
 
 function showSuccess(message) {
+    // Displays success message to user
     // Remove existing messages
     const existingMessages = document.querySelectorAll('.success-message');
     existingMessages.forEach(msg => msg.remove());
@@ -585,16 +610,15 @@ function showSuccess(message) {
     const successDiv = document.createElement('div');
     successDiv.className = 'success-message';
     successDiv.style.cssText = `
-        background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
-        color: white;
-        padding: 12px 20px;
-        margin: 15px 0;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
-        font-weight: 500;
-        animation: slideIn 0.3s ease-out;
-    `;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px 20px;
+    margin: 15px 0;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+`;
     successDiv.textContent = message;
 
     const main = document.querySelector('main');
@@ -611,6 +635,7 @@ function showSuccess(message) {
 }
 
 async function loadPlaceInfoForReview(placeId) {
+    // Loads place information for review context
     try {
         const response = await fetch(`http://localhost:5000/api/v1/places/${placeId}`);
 
@@ -643,4 +668,31 @@ async function loadPlaceInfoForReview(placeId) {
         console.error('Could not load place info:', error);
         showError('Could not load place information.');
     }
+}
+function showPopup() {
+    // Show popup after 2 seconds delay
+    setTimeout(() => {
+        const popup = document.getElementById('popup-overlay');
+        if (popup) {
+            popup.classList.remove('popup-hidden');
+        }
+    }, 2000);
+}
+
+function closePopup() {
+    // Close popup and don't show again for this session
+    const popup = document.getElementById('popup-overlay');
+    if (popup) {
+        popup.classList.add('popup-hidden');
+        // Remember that user closed it
+        sessionStorage.setItem('popupClosed', 'true');
+    }
+}
+
+function getCurrentPage() {
+    const path = window.location.pathname;
+    if (path.includes('index.html') || path.endsWith('/') || path === '') {
+        return 'index';
+    }
+    return 'other';
 }

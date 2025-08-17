@@ -36,35 +36,38 @@
         <section id="places-list">
             <p>Loading...</p>
             <!-- List of places will be populated dynamically -->
-            <!-- <div class="row">
-                <div class="column">
-                    <div class="place-card">
-                        <h3>Beautiful Beach House</h3>
-                        <p>Price per night: $150</p>
-                        <button class="details-button">View Details</button>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="place-card">
-                        <h3>Cozy Cabin</h3>
-                        <p>Price per night: $100</p>
-                        <button class="details-button">View Details</button>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="place-card">
-                        <h3>Modern Apartment</h3>
-                        <p>Price per night: $200</p>
-                        <button class="details-button">View Details</button>
-                    </div>
-                </div>
-            </div> -->
         </section>
     </main>
     <script src="scripts.js"></script>
     <footer class="footer">
         <p>© 2025 HBnB Evolution. All rights reserved.</p>
     </footer>
+    <div id="popup-overlay" class="popup-overlay popup-hidden">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+
+            <!-- Add image section -->
+            <div class="popup-image">
+                <img src="images/singlecats.jpg" alt="Special Offer" onerror="this.style.display='none'">
+            </div>
+
+            <div class="popup-header">
+            </div>
+            <div class="popup-body">
+                <h2><strong>Single cats in your area</h2>
+                <div class="features">
+                    <div class="feature">Fluffy and ready to mingle</div>
+                    <div class="feature">Professional lap warmers</div>
+                    <div class="feature">Knock things off your desk</div>
+                    <div class="feature">3am zoomies included</div>
+                </div>
+                <div class="popup-buttons">
+                    <button class="popup-btn primary" onclick="closePopup()">😻 Chat & Pat Now</button>
+                    <button class="popup-btn secondary" onclick="closePopup()">Maybe Later</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
